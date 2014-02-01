@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using BrightIdeasSoftware;
 //using ObjectListView;
+using System.Windows.Forms;
 
 namespace Snarkdown_WPF
 {
@@ -25,6 +26,31 @@ namespace Snarkdown_WPF
         public MainWindow()
         {
             InitializeComponent();
+
+            // try to set up a datagrid
+            Model.currentDocument = new FileModel(@"F:\Freelance\repos\Snarkdown\SDWF\TestProject");
+            /*
+            foreach (FileModel fm in Model.currentDocument.children)
+            {
+                var item = datagrid.Items.Add(fm);
+            }*/
+        }
+
+        // host our winforms tree view
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            // trying to do our winforms crap
+            ObjectListView olv = new ObjectListView();
+            wfhost.Child = olv;
+            this.grid1.Children.Add(wfhost);
+            olv.Dock = DockStyle.Fill;
+            olv.Columns.Add("File");
+            olv.Columns.Add("Content");
+            olv.Columns.Add("Meta");
+            olv.RebuildColumns();
+            olv.Refresh();
+
+
         }
     }
 }

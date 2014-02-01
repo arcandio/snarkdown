@@ -4,10 +4,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Collections.ObjectModel;
 
 namespace Snarkdown_WPF
 {
-
+    public class FileList : ObservableCollection<FileModel>
+    {
+        public FileList () : base ()
+        {
+            Model.currentDocument = new FileModel(@"F:\Freelance\repos\Snarkdown\SDWF\TestProject");
+            foreach (FileModel fm in Model.docModels)
+            {
+                Add(fm);
+            }
+        }
+    }
     /// <summary>
     /// the model of all data in the program
     /// </summary>
@@ -21,7 +32,7 @@ namespace Snarkdown_WPF
         /// <summary>
         /// open documents
         /// </summary>
-        static public List<FileModel> docModels = new List<FileModel>();
+        static public ObservableCollection<FileModel> docModels = new ObservableCollection<FileModel>();
 
         static public FileModel currentDocument;
         //static public ProjectModel currentProject;
@@ -166,16 +177,22 @@ namespace Snarkdown_WPF
     public class FileModel
     {
         #region FileModel Variables
+
+        public string FileName
+        {
+            get { return fileName; }
+            set { fileName = value; }
+        }
         /// <summary>
         /// name of file, including extension
         /// </summary>
         public string fileName;
-
+        //public string fileName { get; set; }
         /// <summary>
         /// full path to file
         /// </summary>
         public string filePath;
-
+        //public string filePath { get; set; }
         /// <summary>
         /// An Enum describing the type of item
         /// </summary>
@@ -238,7 +255,7 @@ namespace Snarkdown_WPF
         /// <summary>
         /// children items of this folder, if it is one
         /// </summary>
-        public List<FileModel> children;
+        public ObservableCollection<FileModel> children;
 
         /// <summary>
         /// the path to this file's root folder
@@ -337,7 +354,7 @@ namespace Snarkdown_WPF
                     // add to my children
                     if (children == null)
                     {
-                        children = new List<FileModel>();
+                        children = new ObservableCollection<FileModel>();
                     }
                     children.Add(fm);
                     // set the new instance's model
@@ -346,7 +363,7 @@ namespace Snarkdown_WPF
                     // add to list
                     if (Model.docModels == null)
                     {
-                        Model.docModels = new List<FileModel>();
+                        Model.docModels = new ObservableCollection<FileModel>();
                     }
                     Model.docModels.Add(fm);
                 }
