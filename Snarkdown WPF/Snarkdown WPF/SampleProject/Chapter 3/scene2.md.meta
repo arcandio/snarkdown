@@ -1,0 +1,10 @@
+ * synopsis: Dante has a little chat with God, Satan interrupts.
+ * characters: Dante, God, Satan, 
+ * locations: heaven, purgatory
+ * progress: finished, in progress
+ * tags: foo, bar
+
+# Notes
+this is some note tex that should end up appearing in the metadata for `Chapter 1\scene.md`
+
+In theory, this should be a properly formatted markdown document.

@@ -12,7 +12,8 @@ namespace Snarkdown_WPF
     {
         public FileList () : base ()
         {
-            Model.currentDocument = new DocModel(@"F:\Freelance\repos\Snarkdown\SDWF\TestProject");
+            // debug constructor automatically loads the sample project. TODO: Do not ship!
+            Model.currentDocument = new DocModel(@"SampleProject");
             foreach (DocModel fm in Model.docModels)
             {
                 Add(fm);
@@ -42,7 +43,7 @@ namespace Snarkdown_WPF
         /// <summary>
         /// the path to the project folder
         /// </summary>
-        static public string projectPath = @"F:\Freelance\repos\Snarkdown\SDWF\TestProject";
+        static public string projectPath = @"SampleProject";
 
         /// <summary>
         /// Try to open a document by index
@@ -172,7 +173,7 @@ namespace Snarkdown_WPF
         }
     }
     */
-    public class DocModel
+    public partial class DocModel
     {
         #region fields
 

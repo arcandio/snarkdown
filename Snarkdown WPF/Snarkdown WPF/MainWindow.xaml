@@ -32,6 +32,10 @@
                 <DataGridTextColumn Binding="{Binding RelativePath}" Header="File" IsReadOnly="True"/>
                 <DataGridTextColumn Binding="{Binding Snippet}" Header="Snipppet"/>
                 <DataGridTextColumn Binding="{Binding Synopsis}" Header="Synopsis"/>
+                <DataGridTextColumn Binding="{Binding TagProgress}" Header="Progress"/>
+                <DataGridTextColumn Binding="{Binding TagCharacters}" Header="Characters"/>
+                <DataGridTextColumn Binding="{Binding TagLocations}" Header="Locations"/>
+                <DataGridTextColumn Binding="{Binding TagOther}" Header="Tags"/>
             </DataGrid.Columns>
         </DataGrid>
 

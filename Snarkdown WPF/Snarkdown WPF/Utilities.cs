@@ -65,7 +65,10 @@ namespace Snarkdown_WPF
         static public String StringFromTags(List<string> tags)
         {
             string s = "";
-            s = String.Join(", ", tags);
+            if (tags != null && tags.Count > 0)
+            { 
+                s = String.Join(", ", tags);
+            }
             return s;
         }
     }
