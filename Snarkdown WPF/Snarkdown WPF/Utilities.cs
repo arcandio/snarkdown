@@ -55,6 +55,19 @@ namespace Snarkdown_WPF
 
             return n;
         }
+        static public List<string> TagsFromString(string s)
+        {
+            List<string> tags = new List<string>();
+            string[] sep = { "," };
+            tags = s.Replace(", ", ",").Split(sep, StringSplitOptions.RemoveEmptyEntries).ToList<string>();
+            return tags;
+        }
+        static public String StringFromTags(List<string> tags)
+        {
+            string s = "";
+            s = String.Join(", ", tags);
+            return s;
+        }
     }
     static class DirectoryHelper
     {
@@ -146,7 +159,7 @@ namespace Snarkdown_WPF
 
             for (int i = 0; i < Model.docModels.Count; i++)
             {
-                if (Model.docModels[i].filePath == path)
+                if (Model.docModels[i].pathFile == path)
                 {
                     isOpen = i;
                 }

@@ -60,6 +60,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="FileModelProperties.cs" />
     <Compile Include="Utilities.cs" />
     <Compile Include="WordCounter.cs" />
     <Page Include="MainWindow.xaml">

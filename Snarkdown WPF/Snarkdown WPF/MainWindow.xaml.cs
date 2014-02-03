@@ -28,9 +28,9 @@ namespace Snarkdown_WPF
             InitializeComponent();
 
             // try to set up a datagrid
-            Model.currentDocument = new FileModel(@"F:\Freelance\repos\Snarkdown\SDWF\TestProject");
+            Model.currentDocument = new DocModel(@"F:\Freelance\repos\Snarkdown\SDWF\TestProject");
             /*
-            foreach (FileModel fm in Model.currentDocument.children)
+            foreach (DocModel fm in Model.currentDocument.children)
             {
                 var item = datagrid.Items.Add(fm);
             }*/

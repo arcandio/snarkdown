@@ -8,12 +8,12 @@ using System.Collections.ObjectModel;
 
 namespace Snarkdown_WPF
 {
-    public class FileList : ObservableCollection<FileModel>
+    public class FileList : ObservableCollection<DocModel>
     {
         public FileList () : base ()
         {
-            Model.currentDocument = new FileModel(@"F:\Freelance\repos\Snarkdown\SDWF\TestProject");
-            foreach (FileModel fm in Model.docModels)
+            Model.currentDocument = new DocModel(@"F:\Freelance\repos\Snarkdown\SDWF\TestProject");
+            foreach (DocModel fm in Model.docModels)
             {
                 Add(fm);
             }
@@ -25,17 +25,11 @@ namespace Snarkdown_WPF
     static class Model
     {
         /// <summary>
-        /// the list of open projects accessible
-        /// </summary>
-        //static public List<ProjectModel> projectModels = new List<ProjectModel>();
-
-        /// <summary>
         /// open documents
         /// </summary>
-        static public ObservableCollection<FileModel> docModels = new ObservableCollection<FileModel>();
+        static public ObservableCollection<DocModel> docModels = new ObservableCollection<DocModel>();
 
-        static public FileModel currentDocument;
-        //static public ProjectModel currentProject;
+        static public DocModel currentDocument;
 
         static public bool useDocWc = true;
         static public bool useProjWc = true;
@@ -45,6 +39,10 @@ namespace Snarkdown_WPF
         /// form1 instance for access
         /// </summary>
         static public MainWindow f1;
+        /// <summary>
+        /// the path to the project folder
+        /// </summary>
+        static public string projectPath = @"F:\Freelance\repos\Snarkdown\SDWF\TestProject";
 
         /// <summary>
         /// Try to open a document by index
@@ -70,10 +68,10 @@ namespace Snarkdown_WPF
     {
 
         // replacing File Model
-        public List<FileModel> fileModelItems;
+        public List<DocModel> fileModelItems;
         public string projectRoot;
         public string projectFile;
-        public FileModel rootObject;
+        public DocModel rootObject;
 
         public int totalWC;
         public int totalT;
@@ -89,7 +87,7 @@ namespace Snarkdown_WPF
         public ProjectModel()
         {
             // at least set up the lists and add it to the model
-            fileModelItems = new List<FileModel>();
+            fileModelItems = new List<DocModel>();
             Model.projectModels.Add(this);
             Model.currentProject = this;
             // blank constructor, so blank instance
@@ -113,8 +111,8 @@ namespace Snarkdown_WPF
             string pathToRoot = DirectoryHelper.GetRootDir(pathToFolder);
             projectRoot = pathToRoot;
             // initialize a list of files
-            fileModelItems = new List<FileModel>();
-            rootObject = new FileModel(pathToRoot, this);
+            fileModelItems = new List<DocModel>();
+            rootObject = new DocModel(pathToRoot, this);
             //rootObject.myProject = this;
             fileModelItems.Add(rootObject);
             // add this to the model's list
@@ -130,7 +128,7 @@ namespace Snarkdown_WPF
         private void Reinitialize(string pathToFolder)
         {
             // store old file list
-            List<FileModel> old;
+            List<DocModel> old;
             if (fileModelItems.Count > 0)
             {
                 old = fileModelItems;
@@ -139,8 +137,8 @@ namespace Snarkdown_WPF
             string pathToRoot = DirectoryHelper.GetRootDir(pathToFolder);
             projectRoot = pathToRoot;
             // initialize a list of files
-            fileModelItems = new List<FileModel>();
-            rootObject = new FileModel(pathToRoot, this);
+            fileModelItems = new List<DocModel>();
+            rootObject = new DocModel(pathToRoot, this);
             //rootObject.myProject = this;
             fileModelItems.Add(rootObject);
             // add this to the model's list
@@ -159,13 +157,13 @@ namespace Snarkdown_WPF
         /// retrieve file from the project's list
         /// </summary>
         /// <param name="path">path to try to match</param>
-        /// <returns>Reference to the appropriate FileModel</returns>
-        public FileModel GetFile(string path)
+        /// <returns>Reference to the appropriate DocModel</returns>
+        public DocModel GetFile(string path)
         {
-            FileModel gf = null;
+            DocModel gf = null;
             for (int i = 0; i < fileModelItems.Count; i++)
             {
-                if (path == fileModelItems[i].filePath)
+                if (path == fileModelItems[i].pathFile)
                 {
                     gf = fileModelItems[i];
                 }
@@ -174,27 +172,8 @@ namespace Snarkdown_WPF
         }
     }
     */
-    public class FileModel
+    public class DocModel
     {
-        #region properties
-        /*public string FileName
-        {
-            get { return fileName; }
-            set { fileName = value; }
-        }*/
-        public string RelativePath
-        {
-            get
-            {
-                relativePath = filePath.Replace(projectRoot, string.Empty);
-                return relativePath;
-            }
-            set { 
-                relativePath = value;
-                filePath = projectRoot + relativePath;
-            }
-        }
-        #endregion
         #region fields
 
 
@@ -202,67 +181,62 @@ namespace Snarkdown_WPF
         /// name of file, including extension
         /// </summary>
         public string fileName;
-        //public string fileName { get; set; }
         /// <summary>
         /// full path to file
         /// </summary>
-        public string filePath;
-        //public string filePath { get; set; }
+        public string pathFile;
         /// <summary>
         /// An Enum describing the type of item
         /// </summary>
-        public TreeItemType itemType = TreeItemType.None;
-        public string relativePath;
-
+        public TreeItemType metaItemType = TreeItemType.None;
+        /// <summary>
+        /// the path to this file relative to the project folder
+        /// </summary>
+        public string pathRelative;
         /// <summary>
         /// path to the adjacent meta file
         /// </summary>
         public string metaPath;
-
         /// <summary>
         /// does the meta file exist
         /// </summary>
         public bool metaExists;
         /// <summary>
-        /// the contents of the adjacent meta file
+        /// the textContents of the adjacent meta file
         /// </summary>
         public string meta;
-
         /// <summary>
         /// words in this document item
         /// </summary>
         public int wordCount;
-
         /// <summary>
         /// target words for this document item
         /// </summary>
         public int wordCountTarget;
-
         /// <summary>
         /// byte length adjusted for Kindle
         /// </summary>
-        public int bytes;
-
+        public int metaByteLength;
         /// <summary>
         /// the edit date
         /// </summary>
-        public DateTime lastEdit;
-
+        public DateTime metaLastEdit;
         /// <summary>
-        /// the string that contains the PLAIN TEXT contents of the file
+        /// the string that contains the PLAIN TEXT textContents of the file
         /// </summary>
-        public string contents;
-
+        public string textContents;
         /// <summary>
         /// the first few words of the Contents
         /// </summary>
-        public string summary;
-
+        public string textSnippet;
         /// <summary>
-        /// the output of styling the text
+        /// the user-written metaSynopsis stored in the meta file
         /// </summary>
-        public string contentsStyled;
-
+        public string metaSynopsis;
+        /// <summary>
+        /// the output of styling the text for caching
+        /// </summary>
+        public string textContentsStyled;
         /// <summary>
         /// does this item have children?
         /// </summary>
@@ -271,12 +245,7 @@ namespace Snarkdown_WPF
         /// <summary>
         /// children items of this folder, if it is one
         /// </summary>
-        public ObservableCollection<FileModel> children;
-
-        /// <summary>
-        /// the path to this file's root folder
-        /// </summary>
-        public string projectRoot;
+        public ObservableCollection<DocModel> children;
 
         /// <summary>
         /// is this document open in our editor?
@@ -298,47 +267,47 @@ namespace Snarkdown_WPF
          */
         public bool isNew = false;
 
-        /// <summary>
-        /// reference to this file's project model
-        /// </summary>
-        //public ProjectModel myProject;
+        public List<string> tagCharacters;
+        public List<string> tagLocations;
+        public List<string> tagProgress;
+        public List<string> tagOther;
 
         #endregion
 
         /// <summary>
         /// Empty constructor, blank item
         /// </summary>
-        public FileModel()
+        public DocModel()
         {
             // Blank Constructor
-            itemType = TreeItemType.None;
+            metaItemType = TreeItemType.None;
         }
         /// <summary>
         /// constructs and initializes by a file path and project model
         /// </summary>
         /// <param name="path">filename to initialize</param>
         /// <param name="creator">the Project that this file belongs to</param>
-        public FileModel(string path)
+        public DocModel(string path)
         {
             Initialize(path);
         }
 
         /// <summary>
-        /// initialize an instance of FileModel that was not constructed with a path string.
+        /// initialize an instance of DocModel that was not constructed with a path string.
         /// </summary>
         /// <param name="path">filename to initialize</param>
         public void Initialize(string path)
         {
             //db.w("INIT FM: " + path);
             // set up and calculate all variables
-            filePath = path;
+            pathFile = path;
             //myProject = creator;
             GetFileName();
             GetItemType();
             GetItemVisibility();
             GetChildren();
             GetContents();
-            GetSummary();
+            GetSnippet();
             GetKindleFileSize();
             GetMetaFile();
             GetEditDate();
@@ -347,9 +316,9 @@ namespace Snarkdown_WPF
         public void Update()
         {
             // do I still exist?
-            // have my contents changed?
-            // should I save my contents? (isChanged)
-            // should I load my contents? (contents different than loaded string)
+            // have my textContents changed?
+            // should I save my textContents? (isChanged)
+            // should I load my textContents? (textContents different than loaded string)
             // get summary
             // get edit date
             // do I have any new children?
@@ -359,18 +328,18 @@ namespace Snarkdown_WPF
 
         private void GetChildren()
         {
-            if (itemType == TreeItemType.Folder && CheckFilePath(true))
+            if (metaItemType == TreeItemType.Folder && CheckFilePath(true))
             {
-                string[] s = Directory.GetFileSystemEntries(filePath);
-                List<string> myChildren = Directory.EnumerateFileSystemEntries(filePath).ToList<string>();
+                string[] s = Directory.GetFileSystemEntries(pathFile);
+                List<string> myChildren = Directory.EnumerateFileSystemEntries(pathFile).ToList<string>();
                 for (int i = 0; i < myChildren.Count; i++)
                 {
                     // create new child
-                    FileModel fm = new FileModel(myChildren[i]);
+                    DocModel fm = new DocModel(myChildren[i]);
                     // add to my children
                     if (children == null)
                     {
-                        children = new ObservableCollection<FileModel>();
+                        children = new ObservableCollection<DocModel>();
                     }
                     children.Add(fm);
                     // set the new instance's model
@@ -379,7 +348,7 @@ namespace Snarkdown_WPF
                     // add to list
                     if (Model.docModels == null)
                     {
-                        Model.docModels = new ObservableCollection<FileModel>();
+                        Model.docModels = new ObservableCollection<DocModel>();
                     }
                     Model.docModels.Add(fm);
                 }
@@ -391,15 +360,15 @@ namespace Snarkdown_WPF
         {
             if (CheckFilePath(true))
             {
-                lastEdit = File.GetLastWriteTime(filePath);
+                metaLastEdit = File.GetLastWriteTime(pathFile);
             }
         }
 
         private void GetMetaFile()
         {
-            if (CheckFilePath(false) && itemType == TreeItemType.Text)
+            if (CheckFilePath(false) && metaItemType == TreeItemType.Text)
             {
-                metaPath = filePath + ".meta";
+                metaPath = pathFile + ".meta";
                 metaExists = CheckFilePath(metaPath, true);
                 // connect file to meta
                 if (metaExists)
@@ -410,9 +379,9 @@ namespace Snarkdown_WPF
                     }
                 }
             }
-            else if (CheckFilePath(false) && itemType == TreeItemType.Meta)
+            else if (CheckFilePath(false) && metaItemType == TreeItemType.Meta)
             {
-                //metaPath = filePath;
+                //metaPath = pathFile;
                 //metaExists = CheckFilePath(metaPath);
             }
         }
@@ -421,7 +390,7 @@ namespace Snarkdown_WPF
         {
             if (CheckFilePath(true))
             {
-                fileName = Path.GetFileName(filePath);
+                fileName = Path.GetFileName(pathFile);
             }
         }
         /// <summary>
@@ -429,7 +398,7 @@ namespace Snarkdown_WPF
         /// </summary>
         private void GetItemType()
         {
-            itemType = TreeItemType.None;
+            metaItemType = TreeItemType.None;
             if (CheckFilePath(true))
             {
                 string ex = Path.GetExtension(fileName);
@@ -441,41 +410,41 @@ namespace Snarkdown_WPF
                     case ".mmd":
                     case ".mkdn":
                     case ".markdown":
-                        itemType = TreeItemType.Text;
+                        metaItemType = TreeItemType.Text;
                         break;
                     case ".meta":
-                        itemType = TreeItemType.Meta;
+                        metaItemType = TreeItemType.Meta;
                         break;
                     case ".mobi":
                     case ".epub":
-                        itemType = TreeItemType.Ebook;
+                        metaItemType = TreeItemType.Ebook;
                         break;
                     case ".jpg":
                     case ".png":
                     case ".bmp":
                     case ".gif":
-                        itemType = TreeItemType.Image;
+                        metaItemType = TreeItemType.Image;
                         break;
                     case ".html":
                     case ".xhtml":
                     case ".xml":
-                        itemType = TreeItemType.HTML;
+                        metaItemType = TreeItemType.HTML;
                         break;
                     case "":
-                        itemType = TreeItemType.Folder;
+                        metaItemType = TreeItemType.Folder;
                         break;
                     default:
-                        itemType = TreeItemType.Other;
+                        metaItemType = TreeItemType.Other;
                         break;
                 }
                 if (fileName == "project.md.meta")
                 {
-                    itemType = TreeItemType.Project;
+                    metaItemType = TreeItemType.Project;
                 }
             }
             else
             {
-                db.w("DID NOT PASS FILE CHECK ON TYPE: " + filePath);
+                db.w("DID NOT PASS FILE CHECK ON TYPE: " + pathFile);
             }
         }
 
@@ -483,11 +452,11 @@ namespace Snarkdown_WPF
         {
             // does the file exist for us to check?
             /*
-            if (File.Exists(filePath))
+            if (File.Exists(pathFile))
             {
                 // check to see if it's read only or hidden
-                string at = File.GetAttributes(filePath).ToString().ToLower();
-                db.w("File Attributes: " + filePath + at);
+                string at = File.GetAttributes(pathFile).ToString().ToLower();
+                db.w("File Attributes: " + pathFile + at);
                 if (at.Contains("readonly"))
                 {
                     isReadOnly = true;
@@ -501,47 +470,47 @@ namespace Snarkdown_WPF
             {
                 isVisible = false;
             }*/
-            if (itemType == TreeItemType.Meta || (itemType == TreeItemType.Other && (File.Exists(filePath) != true)))
+            if (metaItemType == TreeItemType.Meta || (metaItemType == TreeItemType.Other && (File.Exists(pathFile) != true)))
             {
                 isVisible = false;
             }
         }
 
         /// <summary>
-        /// Retrieve contents of file to the contents string.
+        /// Retrieve textContents of file to the textContents string.
         /// </summary>
         private void GetContents()
         {
-            if (CheckFilePath(true) && itemType == TreeItemType.Text)
+            if (CheckFilePath(true) && metaItemType == TreeItemType.Text)
             {
                 // check item type
-                if (itemType == TreeItemType.None)
+                if (metaItemType == TreeItemType.None)
                 {
                     GetItemType();
                 }
 
                 // load file
-                if (itemType == TreeItemType.Text)
+                if (metaItemType == TreeItemType.Text)
                 {
-                    using (StreamReader sr = new StreamReader(filePath))
+                    using (StreamReader sr = new StreamReader(pathFile))
                     {
-                        contents = sr.ReadToEnd();
+                        textContents = sr.ReadToEnd();
                     }
                 }
             }
         }
-        private void GetSummary()
+        private void GetSnippet()
         {
             string sum = "";
-            if (contents != null && contents.Length > 50)
+            if (textContents != null && textContents.Length > 50)
             {
-                sum = contents.Substring(0, 49);
+                sum = textContents.Substring(0, 49);
             }
             else
             {
-                sum = contents;
+                sum = textContents;
             }
-            summary = sum;
+            textSnippet = sum;
         }
 
         /// <summary>
@@ -550,22 +519,22 @@ namespace Snarkdown_WPF
         private void GetKindleFileSize()
         {
             // Is this what we want? Do we store the max locations, or do we store the number of bytes?
-            WordCounter.GetKindleLocation(contents);
+            WordCounter.GetKindleLocation(textContents);
         }
 
         /// <summary>
-        /// do we have a valid filePath that contains a real file?
+        /// do we have a valid pathFile that contains a real file?
         /// </summary>
         /// <returns></returns>
         private bool CheckFilePath(bool needsToExist)
         {
-            if (filePath != null && filePath.Length > 0 && (needsToExist == false || (File.Exists(filePath) || Directory.Exists(filePath))))
+            if (pathFile != null && pathFile.Length > 0 && (needsToExist == false || (File.Exists(pathFile) || Directory.Exists(pathFile))))
             {
                 return true;
             }
             else
             {
-                db.w("DOES NOT EXIST: " + filePath);
+                db.w("DOES NOT EXIST: " + pathFile);
                 return false;
             }
         }
@@ -595,9 +564,9 @@ namespace Snarkdown_WPF
         {
             if (CheckFilePath(false))
             {
-                using (StreamWriter sw = new StreamWriter(filePath))
+                using (StreamWriter sw = new StreamWriter(pathFile))
                 {
-                    sw.Write(contents);
+                    sw.Write(textContents);
                 }
                 if (meta.Length > 0)
                 {
@@ -609,7 +578,7 @@ namespace Snarkdown_WPF
             }
             else
             {
-                db.w("could not save file to path: " + filePath);
+                db.w("could not save file to path: " + pathFile);
             }
         }
         /// <summary>
@@ -619,9 +588,9 @@ namespace Snarkdown_WPF
         {
             if (CheckFilePath(true))
             {
-                using (StreamReader sr = new StreamReader(filePath))
+                using (StreamReader sr = new StreamReader(pathFile))
                 {
-                    contents = sr.ReadToEnd();
+                    textContents = sr.ReadToEnd();
                 }
                 using (StreamReader sr = new StreamReader(metaPath))
                 {
@@ -630,7 +599,7 @@ namespace Snarkdown_WPF
             }
             else
             {
-                db.w("could not load file from path: " + filePath);
+                db.w("could not load file from path: " + pathFile);
             }
         }
     }
