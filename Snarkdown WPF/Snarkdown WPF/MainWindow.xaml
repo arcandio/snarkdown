@@ -34,10 +34,10 @@
                 </GridView>
             </Tree:TreeList.View>
         </Tree:TreeList>
-        <DataGrid x:Name="datagrid" ItemsSource="{Binding Source={StaticResource data}}" HorizontalAlignment="Left" Margin="10,35,0,0" Grid.Row="1" VerticalAlignment="Top" Height="155" Width="489">
+        <DataGrid x:Name="datagrid" ItemsSource="{Binding Source={StaticResource data}}" HorizontalAlignment="Left" Margin="10,35,0,0" Grid.Row="1" VerticalAlignment="Top" Height="155" Width="489" AutoGenerateColumns="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Path=FileName}" Header="Filename" IsReadOnly="True"/>
-                <DataGridTextColumn Binding="{Binding Path=contents}" Header="Content"/>
+                <DataGridTextColumn Binding="{Binding Path=contents}" Header="Content Sample"/>
                 <DataGridTextColumn Binding="{Binding Path=meta}" Header="Meta"/>
             </DataGrid.Columns>
         </DataGrid>

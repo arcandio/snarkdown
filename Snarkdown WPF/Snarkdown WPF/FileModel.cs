@@ -176,13 +176,28 @@ namespace Snarkdown_WPF
     */
     public class FileModel
     {
-        #region FileModel Variables
-
-        public string FileName
+        #region properties
+        /*public string FileName
         {
             get { return fileName; }
             set { fileName = value; }
+        }*/
+        public string RelativePath
+        {
+            get
+            {
+                relativePath = filePath.Replace(projectRoot, string.Empty);
+                return relativePath;
+            }
+            set { 
+                relativePath = value;
+                filePath = projectRoot + relativePath;
+            }
         }
+        #endregion
+        #region fields
+
+
         /// <summary>
         /// name of file, including extension
         /// </summary>
@@ -198,11 +213,6 @@ namespace Snarkdown_WPF
         /// </summary>
         public TreeItemType itemType = TreeItemType.None;
         public string relativePath;
-        public string RelativePath 
-        {
-            get { return relativePath; }
-            set { relativePath = value; }
-        }
 
         /// <summary>
         /// path to the adjacent meta file
