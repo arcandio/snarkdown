@@ -39,6 +39,7 @@ namespace Snarkdown_WPF
         // host our winforms tree view
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            /*
             // trying to do our winforms crap
             ObjectListView olv = new ObjectListView();
             wfhost.Child = olv;
@@ -50,7 +51,7 @@ namespace Snarkdown_WPF
             olv.RebuildColumns();
             olv.Refresh();
 
-
+            */
         }
     }
 }

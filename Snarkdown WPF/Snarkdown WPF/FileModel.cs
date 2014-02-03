@@ -197,6 +197,12 @@ namespace Snarkdown_WPF
         /// An Enum describing the type of item
         /// </summary>
         public TreeItemType itemType = TreeItemType.None;
+        public string relativePath;
+        public string RelativePath 
+        {
+            get { return relativePath; }
+            set { relativePath = value; }
+        }
 
         /// <summary>
         /// path to the adjacent meta file
