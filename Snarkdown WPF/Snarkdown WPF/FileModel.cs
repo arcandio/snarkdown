@@ -23,8 +23,9 @@ namespace Snarkdown_WPF
     /// <summary>
     /// the model of all data in the program
     /// </summary>
-    static class Model
+    public static class Model
     {
+        public Model model;
         /// <summary>
         /// open documents
         /// </summary>

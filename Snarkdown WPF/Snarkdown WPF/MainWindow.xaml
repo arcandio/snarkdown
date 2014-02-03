@@ -6,7 +6,7 @@
         x:Class="Snarkdown_WPF.MainWindow"
         Title="Snarkdown" Height="629.3" Width="746" Background="{DynamicResource appBg}" Icon="snarkdown Icon 3 copy.ico">
     <Window.Resources>
-        <local:FileList x:Key="data" />
+        <local:FileList x:Key="filelist" />
     </Window.Resources>
     <Grid x:Name="grid1">
         <Grid.RowDefinitions>
@@ -18,16 +18,23 @@
             <ColumnDefinition Width="509*"/>
             <ColumnDefinition Width="229*"/>
         </Grid.ColumnDefinitions>
-        <Menu Height="21" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+        <Menu Height="21" VerticalAlignment="Top" Grid.ColumnSpan="2">
+            <MenuItem Header="_File">
+                <MenuItem Header="_New" />
+            </MenuItem>
+            <MenuItem Header="_Edit" />
+            <MenuItem Header="_Tools" />
+            <CheckBox Content="Fullscreen"/>
+        </Menu>
         <StatusBar Grid.ColumnSpan="2" Grid.Row="2" Height="23" VerticalAlignment="Bottom"/>
         <TextBox x:Name="docview" TextWrapping="Wrap" Text="TextBox" SpellCheck.IsEnabled="True" Margin="10,49,10,10"/>
         <TextBox x:Name="metaview" TextWrapping="Wrap" Text="TextBox" Margin="10,49,10,10" Grid.Column="1"/>
-        <GridSplitter Margin="0,21,227,0" Width="4" Grid.ColumnSpan="2"/>
+        <GridSplitter Margin="0,21,-2,0" Width="4"/>
         <GridSplitter HorizontalAlignment="Stretch" Height="4" VerticalAlignment="Top" ResizeDirection="Rows" Grid.Row="1" Grid.ColumnSpan="2"/>
         <Label Content="Document" HorizontalAlignment="Left" Margin="10,23,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.577" Height="26" Width="65"/>
         <Label Content="Meta" Grid.Column="1" HorizontalAlignment="Left" Margin="10,23,0,0" VerticalAlignment="Top" Height="26" Width="37"/>
         <Label Content="Project" HorizontalAlignment="Left" Margin="10,9,0,0" Grid.Row="1" VerticalAlignment="Top"/>
-        <DataGrid x:Name="datagrid" ItemsSource="{Binding Source={StaticResource data}}" Margin="10,35,10,5" Grid.Row="1" AutoGenerateColumns="False" Grid.ColumnSpan="2">
+        <DataGrid x:Name="datagrid" ItemsSource="{Binding Source={StaticResource filelist}}" Margin="10,35,10,5" Grid.Row="1" AutoGenerateColumns="False" Grid.ColumnSpan="2">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding RelativePath}" Header="File" IsReadOnly="True"/>
                 <DataGridTextColumn Binding="{Binding Snippet}" Header="Snipppet"/>
