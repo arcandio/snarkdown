@@ -4,15 +4,19 @@
         xmlns:Tree="clr-namespace:Aga.Controls.Tree;assembly=Aga.Controls"
         xmlns:local="clr-namespace:Snarkdown_WPF"
         x:Class="Snarkdown_WPF.MainWindow"
+        xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
         Title="Snarkdown" Height="629.3" Width="746" Background="{DynamicResource appBg}" Icon="snarkdown Icon 3 copy.ico">
-    <Window.Resources>
+    <!--<Window.Resources>
         <local:FileList x:Key="filelist" />
-    </Window.Resources>
+    </Window.Resources>-->
+    <Window.DataContext>
+        <Binding Source="{StaticResource model}" />
+    </Window.DataContext>
     <Grid x:Name="grid1">
         <Grid.RowDefinitions>
             <RowDefinition Height="381*"/>
-            <RowDefinition Height="195*"/>
-            <RowDefinition Height="23*"/>
+            <RowDefinition Height="186*"/>
+            <RowDefinition Height="32*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="509*"/>
@@ -20,21 +24,42 @@
         </Grid.ColumnDefinitions>
         <Menu Height="21" VerticalAlignment="Top" Grid.ColumnSpan="2">
             <MenuItem Header="_File">
-                <MenuItem Header="_New" />
+                <MenuItem x:Name="NewDoc" Header="_New Document" InputGestureText="Ctrl+N" Click="NewDoc_Click" />
+                <MenuItem x:Name="OpenDoc" Header="_Open Document" InputGestureText="Ctrl+O" Click="OpenDoc_Click" />
+                <MenuItem x:Name="SaveDoc" Header="_Save Document" InputGestureText="Ctrl+S" Click="SaveDoc_Click" />
+                <Separator />
+                <MenuItem x:Name="NewProj" Header="_New Project" Click="NewProj_Click" />
+                <MenuItem x:Name="OpenProj" Header="_Open Project" Click="OpenProj_Click" />
+                <Separator />
+                <MenuItem x:Name="ExportProj" Header="_Export Project" InputGestureText="Ctrl+Alt+E" Click="ExportProj_Click" />
+                <MenuItem x:Name="BackupProj" Header="_Backup Project" InputGestureText="Ctrl+Alt+B" Click="BackupProj_Click" />
             </MenuItem>
-            <MenuItem Header="_Edit" />
+            <MenuItem Header="_Edit">
+                <MenuItem Header="_Copy" InputGestureText="Ctrl+C"/>
+                <MenuItem Header="_Cut" InputGestureText="Ctrl+X"/>
+                <MenuItem Header="_Paste" InputGestureText="Ctrl+V"/>
+                <MenuItem Header="_Find" InputGestureText="Ctrl+F"/>
+                <MenuItem Header="_Replace" InputGestureText="Ctrl+H"/>
+            </MenuItem>
+            <MenuItem Header="_View">
+                <MenuItem Header="Fullscreen" InputGestureText="F11" IsCheckable="True"/>
+                <MenuItem Header="Text Size +" InputGestureText="Ctrl++" />
+                <MenuItem Header="Text Size -" InputGestureText="Ctrl+-" />
+            </MenuItem>
             <MenuItem Header="_Tools" />
-            <CheckBox Content="Fullscreen"/>
         </Menu>
-        <StatusBar Grid.ColumnSpan="2" Grid.Row="2" Height="23" VerticalAlignment="Bottom"/>
-        <TextBox x:Name="docview" TextWrapping="Wrap" Text="TextBox" SpellCheck.IsEnabled="True" Margin="10,49,10,10"/>
-        <TextBox x:Name="metaview" TextWrapping="Wrap" Text="TextBox" Margin="10,49,10,10" Grid.Column="1"/>
-        <GridSplitter Margin="0,21,-2,0" Width="4"/>
+        <StatusBar Grid.ColumnSpan="2" Grid.Row="2">
+            <Button Content="Edit Word Counts"/>
+            <MenuItem Header="Wordcount"/>
+        </StatusBar>
+        <TextBox x:Name="docview" TextWrapping="Wrap" Text="{Binding Instance.RootObject.Synopsis}" SpellCheck.IsEnabled="True" Margin="10,49,10,10"/>
+        <TextBox x:Name="metaview" TextWrapping="Wrap" Text="{Binding Instance.RootObject.Synopsis}" Margin="10,49,10,10" Grid.Column="1"/>
+        <GridSplitter Margin="0,21,227,0" Width="4" Grid.ColumnSpan="2"/>
         <GridSplitter HorizontalAlignment="Stretch" Height="4" VerticalAlignment="Top" ResizeDirection="Rows" Grid.Row="1" Grid.ColumnSpan="2"/>
         <Label Content="Document" HorizontalAlignment="Left" Margin="10,23,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.577" Height="26" Width="65"/>
         <Label Content="Meta" Grid.Column="1" HorizontalAlignment="Left" Margin="10,23,0,0" VerticalAlignment="Top" Height="26" Width="37"/>
-        <Label Content="Project" HorizontalAlignment="Left" Margin="10,9,0,0" Grid.Row="1" VerticalAlignment="Top"/>
-        <DataGrid x:Name="datagrid" ItemsSource="{Binding Source={StaticResource filelist}}" Margin="10,35,10,5" Grid.Row="1" AutoGenerateColumns="False" Grid.ColumnSpan="2">
+        <Label Content="Project" HorizontalAlignment="Left" Margin="10,9,0,0" Grid.Row="1" VerticalAlignment="Top" Height="26" Width="47"/>
+        <DataGrid x:Name="datagrid" ItemsSource="{Binding Instance.DocModels}" Margin="10,35,10,5" Grid.Row="1" AutoGenerateColumns="False" Grid.ColumnSpan="2" diag:PresentationTraceSources.TraceLevel="High">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding RelativePath}" Header="File" IsReadOnly="True"/>
                 <DataGridTextColumn Binding="{Binding Snippet}" Header="Snipppet"/>

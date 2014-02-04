@@ -8,63 +8,6 @@ using System.Collections.ObjectModel;
 
 namespace Snarkdown_WPF
 {
-    public class FileList : ObservableCollection<DocModel>
-    {
-        public FileList () : base ()
-        {
-            // debug constructor automatically loads the sample project. TODO: Do not ship!
-            Model.currentDocument = new DocModel(@"SampleProject");
-            foreach (DocModel fm in Model.docModels)
-            {
-                Add(fm);
-            }
-        }
-    }
-    /// <summary>
-    /// the model of all data in the program
-    /// </summary>
-    public static class Model
-    {
-        public Model model;
-        /// <summary>
-        /// open documents
-        /// </summary>
-        static public ObservableCollection<DocModel> docModels = new ObservableCollection<DocModel>();
-
-        static public DocModel currentDocument;
-
-        static public bool useDocWc = true;
-        static public bool useProjWc = true;
-        static public bool useDayWc = false;
-
-        /// <summary>
-        /// form1 instance for access
-        /// </summary>
-        static public MainWindow f1;
-        /// <summary>
-        /// the path to the project folder
-        /// </summary>
-        static public string projectPath = @"SampleProject";
-
-        /// <summary>
-        /// Try to open a document by index
-        /// </summary>
-        /// <param name="index">the number of the document on the stack</param>
-        /// <returns>bool: was it successful?</returns>
-        static public bool GetOpenDocument(int index)
-        {
-            bool worked = false;
-
-            if (index <= 0 && index > docModels.Count)
-            {
-                //openDocIndex = index;
-                currentDocument = docModels[index];
-                worked = true;
-            }
-
-            return worked;
-        }
-    }
     /*
     public class ProjectModel
     {
@@ -300,6 +243,8 @@ namespace Snarkdown_WPF
         /// <param name="path">filename to initialize</param>
         public void Initialize(string path)
         {
+            //db.w(path);
+            Model.Instance.docModels.Add(this);
             //db.w("INIT FM: " + path);
             // set up and calculate all variables
             pathFile = path;
@@ -330,7 +275,7 @@ namespace Snarkdown_WPF
 
         private void GetChildren()
         {
-            if (metaItemType == TreeItemType.Folder && CheckFilePath(true))
+            if (metaItemType == TreeItemType.Folder && /*CheckFilePath(true)*/Directory.Exists(pathFile))
             {
                 string[] s = Directory.GetFileSystemEntries(pathFile);
                 List<string> myChildren = Directory.EnumerateFileSystemEntries(pathFile).ToList<string>();
@@ -348,11 +293,12 @@ namespace Snarkdown_WPF
                     //fm.myProject = myProject;
 
                     // add to list
-                    if (Model.docModels == null)
+                    if (Model.Instance.docModels == null)
                     {
-                        Model.docModels = new ObservableCollection<DocModel>();
+                        Model.Instance.docModels = new ObservableCollection<DocModel>();
                     }
-                    Model.docModels.Add(fm);
+                    Model.Instance.docModels.Add(fm);
+                    //db.w("doc models: " + Model.Instance.docModels.Count);
                 }
                 hasChildren = true;
             }

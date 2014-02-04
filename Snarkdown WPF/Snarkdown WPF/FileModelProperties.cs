@@ -14,9 +14,9 @@ namespace Snarkdown_WPF
         {
             get
             {
-                if (pathFile != null && pathFile.Length > 0 && Model.projectPath != null && Model.projectPath.Length > 0)
+                if (pathFile != null && pathFile.Length > 0 && Model.Instance.projectPath != null && Model.Instance.projectPath.Length > 0)
                 {
-                    pathRelative = pathFile.Replace(Model.projectPath, string.Empty);
+                    pathRelative = pathFile.Replace(Model.Instance.projectPath, string.Empty);
                 }
                 else
                 {
@@ -27,7 +27,7 @@ namespace Snarkdown_WPF
             set
             {
                 pathRelative = value;
-                pathFile = Model.projectPath + pathRelative;
+                pathFile = Model.Instance.projectPath + pathRelative;
             }
         }
         public TreeItemType Type
@@ -52,7 +52,7 @@ namespace Snarkdown_WPF
         }
         public string Synopsis
         {
-            get { return metaSynopsis; }
+            get { return meta; }
             set { metaSynopsis = value; }
         }
         public string TagCharacters

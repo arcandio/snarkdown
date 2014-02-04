@@ -12,9 +12,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using BrightIdeasSoftware;
+using Microsoft.Win32;
+using System.IO;
+//using BrightIdeasSoftware;
 //using ObjectListView;
-using System.Windows.Forms;
+//using System.Windows.Forms;
 
 namespace Snarkdown_WPF
 {
@@ -28,31 +30,65 @@ namespace Snarkdown_WPF
             InitializeComponent();
 
             // try to set up a datagrid
-            Model.currentDocument = new DocModel(@"TestProject");
+            //Model.Instance.currentDocument = new DocModel(@"TestProject");
             /*
             foreach (DocModel fm in Model.currentDocument.children)
             {
                 var item = datagrid.Items.Add(fm);
             }*/
+            Model.Instance.LoadProject(@"SampleProject");
+        }
+
+        private void NewDoc_Click(object sender, RoutedEventArgs e)
+        {
+            Model.Instance.currentDocument = new DocModel();
+        }
+
+        private void OpenDoc_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Markdown Files (.md, .txt)|*.md;*.txt|Text Files (.txt)|*.txt|All Files (*.*)|*.*";
+            ofd.FilterIndex = 1;
+            ofd.Multiselect = false;
+            Nullable<bool> result = ofd.ShowDialog();
+            string returnedPath = "";
+            if (result == true)
+            {
+                returnedPath = ofd.FileName;
+            }
+            if (File.Exists(returnedPath))
+            {
+                Model.Instance.docModels = new System.Collections.ObjectModel.ObservableCollection<DocModel>();
+                Model.Instance.rootObject = null;
+                Model.Instance.LoadProject(returnedPath);
+                
+                //Model.Instance.rootObject = new DocModel(returnedPath);
+            }
+        }
+
+        private void SaveDoc_Click(object sender, RoutedEventArgs e)
+        {
 
         }
 
-        // host our winforms tree view
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private void NewProj_Click(object sender, RoutedEventArgs e)
         {
-            /*
-            // trying to do our winforms crap
-            ObjectListView olv = new ObjectListView();
-            wfhost.Child = olv;
-            this.grid1.Children.Add(wfhost);
-            olv.Dock = DockStyle.Fill;
-            olv.Columns.Add("File");
-            olv.Columns.Add("Content");
-            olv.Columns.Add("Meta");
-            olv.RebuildColumns();
-            olv.Refresh();
 
-            */
+        }
+
+        private void OpenProj_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ExportProj_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BackupProj_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

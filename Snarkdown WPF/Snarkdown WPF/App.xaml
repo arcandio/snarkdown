@@ -1,11 +1,12 @@
 ﻿<Application x:Class="Snarkdown_WPF.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             StartupUri="MainWindow.xaml">
+             StartupUri="MainWindow.xaml"
+             xmlns:local="clr-namespace:Snarkdown_WPF">
     <Application.Resources>
 
         <SolidColorBrush x:Key="appBgColor" Color="White"/>
         <SolidColorBrush x:Key="appBg" Color="#FFD1D1D1"/>
-
+        <x:StaticExtension Member="local:Model.Instance" x:Key="model" />
     </Application.Resources>
 </Application>

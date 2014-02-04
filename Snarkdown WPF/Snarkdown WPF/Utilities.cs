@@ -160,9 +160,9 @@ namespace Snarkdown_WPF
         {
             int isOpen = -1;
 
-            for (int i = 0; i < Model.docModels.Count; i++)
+            for (int i = 0; i < Model.Instance.docModels.Count; i++)
             {
-                if (Model.docModels[i].pathFile == path)
+                if (Model.Instance.docModels[i].pathFile == path)
                 {
                     isOpen = i;
                 }
