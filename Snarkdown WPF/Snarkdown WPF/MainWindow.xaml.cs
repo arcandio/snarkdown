@@ -28,7 +28,7 @@ namespace Snarkdown_WPF
         public MainWindow()
         {
             InitializeComponent();
-            Model.Instance.LoadProject(@"SampleProject"); // debuggery
+            //Model.Instance.LoadProject(@"SampleProject"); // debuggery
         }
 
         private void NewDoc_Click(object sender, RoutedEventArgs e)

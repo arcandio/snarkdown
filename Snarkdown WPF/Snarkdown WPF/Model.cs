@@ -121,6 +121,26 @@ namespace Snarkdown_WPF
                 NotifyPropertyChanged(); 
             } 
         }
+        public string Meta
+        {
+            get
+            {
+                string t = "";
+                if (Instance.currentDocument != null && Instance.currentDocument.textContents != null)
+                {
+                    t = Instance.currentDocument.meta;
+                }
+                return t;
+            }
+            set
+            {
+                if (Instance.currentDocument != null)
+                {
+                    Instance.currentDocument.meta = value;
+                }
+                NotifyPropertyChanged();
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
@@ -146,6 +166,8 @@ namespace Snarkdown_WPF
                 {
                     currentDocument = GetDocByFilename(path);
                 }
+                Content = currentDocument.textContents;
+                Meta = currentDocument.meta;
                 NotifyPropertyChanged();
             }
         }
@@ -161,6 +183,11 @@ namespace Snarkdown_WPF
             }
             NotifyPropertyChanged();
             return dm;
+        }
+        public void SetOpenDoc()
+        {
+
+
         }
     }
 }
