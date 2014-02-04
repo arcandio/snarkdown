@@ -52,8 +52,8 @@
             <Button Content="Edit Word Counts"/>
             <MenuItem Header="Wordcount"/>
         </StatusBar>
-        <TextBox x:Name="docview" TextWrapping="Wrap" Text="{Binding Instance.RootObject.Synopsis}" SpellCheck.IsEnabled="True" Margin="10,49,10,10"/>
-        <TextBox x:Name="metaview" TextWrapping="Wrap" Text="{Binding Instance.RootObject.Synopsis}" Margin="10,49,10,10" Grid.Column="1"/>
+        <TextBox x:Name="docview" TextWrapping="Wrap" Text="{Binding Instance.CurrentDocument.Snippet}" SpellCheck.IsEnabled="True" Margin="10,49,10,10"/>
+        <TextBox x:Name="metaview" TextWrapping="Wrap" Text="{Binding Instance.CurrentDocument.Synopsis}" Margin="10,49,10,10" Grid.Column="1"/>
         <GridSplitter Margin="0,21,227,0" Width="4" Grid.ColumnSpan="2"/>
         <GridSplitter HorizontalAlignment="Stretch" Height="4" VerticalAlignment="Top" ResizeDirection="Rows" Grid.Row="1" Grid.ColumnSpan="2"/>
         <Label Content="Document" HorizontalAlignment="Left" Margin="10,23,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.577" Height="26" Width="65"/>

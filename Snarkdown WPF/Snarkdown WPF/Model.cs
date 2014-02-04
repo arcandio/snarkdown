@@ -67,17 +67,38 @@ namespace Snarkdown_WPF
         }
 
         public bool useDocWc = true;
+        public bool UseDocWc
+        {
+            get { return useDocWc; }
+            set { useDocWc = value; }
+        }
         public bool useProjWc = true;
+        public bool UseProjWc
+        {
+            get { return useProjWc; }
+            set { useProjWc = value; }
+        }
         public bool useDayWc = false;
+        public bool UseDayWc
+        {
+            get { return useDayWc; }
+            set { useDayWc = value; }
+        }
+        
 
         /// <summary>
         /// form1 instance for access
         /// </summary>
-        public MainWindow f1;
+        //public MainWindow f1;
         /// <summary>
         /// the path to the project folder
         /// </summary>
         public string projectPath = "";
+        public string ProjectPath
+        {
+            get { return projectPath; }
+            set { projectPath = value; }
+        }
 
         public DocModel rootObject;
         public DocModel RootObject
@@ -126,9 +147,25 @@ namespace Snarkdown_WPF
                 rootObject = new DocModel(projectPath);
                 currentDocument = rootObject;
                 db.w("loaded: " + projectPath);
+                // we did not actually load a project, we tried to load a file
+                if (path != projectPath)
+                {
+                    currentDocument = GetDocByFilename(path);
+                }
                 NotifyPropertyChanged();
             }
-
+        }
+        public DocModel GetDocByFilename(string path)
+        {
+            DocModel dm = new DocModel();
+            foreach (DocModel di in instance.docModels)
+            {
+                if (di.pathFile == path)
+                {
+                    dm = di;
+                }
+            }
+            return dm;
         }
     }
 }

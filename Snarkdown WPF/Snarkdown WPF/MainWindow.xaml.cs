@@ -28,15 +28,7 @@ namespace Snarkdown_WPF
         public MainWindow()
         {
             InitializeComponent();
-
-            // try to set up a datagrid
-            //Model.Instance.currentDocument = new DocModel(@"TestProject");
-            /*
-            foreach (DocModel fm in Model.currentDocument.children)
-            {
-                var item = datagrid.Items.Add(fm);
-            }*/
-            Model.Instance.LoadProject(@"SampleProject");
+            //Model.Instance.LoadProject(@"SampleProject"); // debuggery
         }
 
         private void NewDoc_Click(object sender, RoutedEventArgs e)
@@ -61,8 +53,6 @@ namespace Snarkdown_WPF
                 Model.Instance.DocModels = new System.Collections.ObjectModel.ObservableCollection<DocModel>();
                 Model.Instance.RootObject = null;
                 Model.Instance.LoadProject(returnedPath);
-                
-                //Model.Instance.rootObject = new DocModel(returnedPath);
             }
         }
 
