@@ -70,26 +70,21 @@ namespace Snarkdown_WPF
         public bool UseDocWc
         {
             get { return useDocWc; }
-            set { useDocWc = value; }
+            set { useDocWc = value; NotifyPropertyChanged(); }
         }
         public bool useProjWc = true;
         public bool UseProjWc
         {
             get { return useProjWc; }
-            set { useProjWc = value; }
+            set { useProjWc = value; NotifyPropertyChanged(); }
         }
         public bool useDayWc = false;
         public bool UseDayWc
         {
             get { return useDayWc; }
-            set { useDayWc = value; }
+            set { useDayWc = value; NotifyPropertyChanged(); }
         }
-        
-
-        /// <summary>
-        /// form1 instance for access
-        /// </summary>
-        //public MainWindow f1;
+       
         /// <summary>
         /// the path to the project folder
         /// </summary>
@@ -97,14 +92,34 @@ namespace Snarkdown_WPF
         public string ProjectPath
         {
             get { return projectPath; }
-            set { projectPath = value; }
+            set { projectPath = value; NotifyPropertyChanged(); }
         }
 
         public DocModel rootObject;
         public DocModel RootObject
         {
             get { return rootObject; }
-            set { currentDocument = value; NotifyPropertyChanged(); }
+            set { Instance.currentDocument = value; NotifyPropertyChanged(); }
+        }
+        public string Content
+        {
+            get
+            {
+                string t ="";
+                if (Instance.currentDocument != null && Instance.currentDocument.textContents != null)
+                {
+                    t = Instance.currentDocument.textContents;
+                }
+                return t; 
+            }
+            set 
+            {
+                if (Instance.currentDocument != null)
+                {
+                    Instance.currentDocument.textContents = value;
+                }
+                NotifyPropertyChanged(); 
+            } 
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -115,27 +130,6 @@ namespace Snarkdown_WPF
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
-
-        /*
-        /// <summary>
-        /// Try to open a document by index
-        /// </summary>
-        /// <param name="index">the number of the document on the stack</param>
-        /// <returns>bool: was it successful?</returns>
-        public bool GetOpenDocument(int index)
-        {
-            bool worked = false;
-
-            if (index <= 0 && index > docModels.Count)
-            {
-                //openDocIndex = index;
-                currentDocument = docModels[index];
-                worked = true;
-            }
-
-            return worked;
-        }
-        */
         public void LoadProject(string path)
         {
             // check if a file exists at the path
@@ -165,6 +159,7 @@ namespace Snarkdown_WPF
                     dm = di;
                 }
             }
+            NotifyPropertyChanged();
             return dm;
         }
     }
