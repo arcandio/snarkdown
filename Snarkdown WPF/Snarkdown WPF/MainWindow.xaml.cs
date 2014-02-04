@@ -25,10 +25,17 @@ namespace Snarkdown_WPF
     /// </summary>
     public partial class MainWindow : Window
     {
+        //bool isFullscreen = false;
+        public bool IsFullscreen { get; set; }
+        GridLength columnWidth;
+        GridLength rowHeight;
+
         public MainWindow()
         {
             InitializeComponent();
             //Model.Instance.LoadProject(@"SampleProject"); // debuggery
+            columnWidth = collapseCol.Width;
+            rowHeight = collapseRow.Height;
         }
 
         private void NewDoc_Click(object sender, RoutedEventArgs e)
@@ -48,7 +55,7 @@ namespace Snarkdown_WPF
 
         private void NewProj_Click(object sender, RoutedEventArgs e)
         {
-
+            
         }
 
         private void OpenProj_Click(object sender, RoutedEventArgs e)
@@ -81,6 +88,25 @@ namespace Snarkdown_WPF
 
         }
 
+        private void Fullscreen_Click(object sender, ExecutedRoutedEventArgs e)
+        {
+            IsFullscreen = !IsFullscreen;
+            if(IsFullscreen == true)
+            {
+                collapseCol.Width = new GridLength(0, GridUnitType.Star);
+                collapseRow.Height = new GridLength(0, GridUnitType.Star);
+            }
+            else
+            {
+                collapseCol.Width = columnWidth;
+                collapseRow.Height = rowHeight;
+            }
+            if (fullscreenMenuItem.IsChecked != IsFullscreen)
+            {
+                fullscreenMenuItem.IsChecked = IsFullscreen;
+            }
+        }
+
         private void datagrid_CurrentCellChanged(object sender, EventArgs e)
         {
             // throws an error if you click on the last row...
@@ -93,6 +119,22 @@ namespace Snarkdown_WPF
                 }
                 //db.w(""+i);
             }
+        }
+    }
+    public static class Commands
+    {
+        // http://stackoverflow.com/questions/5329292/why-doesnt-setting-menuitem-inputgesturetext-cause-the-menuitem-to-activate-whe
+        public static readonly RoutedCommand NewProject = new RoutedCommand("New Project", typeof(Commands));
+        public static readonly RoutedCommand BackupProject = new RoutedCommand("Backup Project", typeof(Commands));
+        public static readonly RoutedCommand ExportProject = new RoutedCommand("Export Project", typeof(Commands));
+        public static readonly RoutedCommand FullScreen = new RoutedCommand("Fullscreen", typeof(Commands));
+
+        static Commands()
+        {
+            NewProject.InputGestures.Add(new KeyGesture(Key.N, ModifierKeys.Control | ModifierKeys.Alt));
+            BackupProject.InputGestures.Add(new KeyGesture(Key.B, ModifierKeys.Control | ModifierKeys.Alt));
+            ExportProject.InputGestures.Add(new KeyGesture(Key.E, ModifierKeys.Control | ModifierKeys.Alt));
+            FullScreen.InputGestures.Add(new KeyGesture(Key.F11));
         }
     }
 }
