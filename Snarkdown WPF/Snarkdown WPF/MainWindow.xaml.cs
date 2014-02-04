@@ -38,6 +38,21 @@ namespace Snarkdown_WPF
 
         private void OpenDoc_Click(object sender, RoutedEventArgs e)
         {
+
+        }
+
+        private void SaveDoc_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void NewProj_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void OpenProj_Click(object sender, RoutedEventArgs e)
+        {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "Markdown Files (.md, .txt)|*.md;*.txt|Text Files (.txt)|*.txt|All Files (*.*)|*.*";
             ofd.FilterIndex = 1;
@@ -56,21 +71,6 @@ namespace Snarkdown_WPF
             }
         }
 
-        private void SaveDoc_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void NewProj_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void OpenProj_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void ExportProj_Click(object sender, RoutedEventArgs e)
         {
 
@@ -79,6 +79,20 @@ namespace Snarkdown_WPF
         private void BackupProj_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void datagrid_CurrentCellChanged(object sender, EventArgs e)
+        {
+            // throws an error if you click on the last row...
+            if (datagrid.CurrentItem.ToString() != "{NewItemPlaceholder}")
+            {
+                DocModel i = (DocModel)datagrid.CurrentItem;
+                if (i != null)
+                {
+                    Model.Instance.CurrentDocument = i;
+                }
+                //db.w(""+i);
+            }
         }
     }
 }

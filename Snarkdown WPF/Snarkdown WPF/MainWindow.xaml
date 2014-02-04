@@ -25,7 +25,7 @@
         <Menu Height="21" VerticalAlignment="Top" Grid.ColumnSpan="2">
             <MenuItem Header="_File">
                 <MenuItem x:Name="NewDoc" Header="_New Document" InputGestureText="Ctrl+N" Click="NewDoc_Click" />
-                <MenuItem x:Name="OpenDoc" Header="_Open Document" InputGestureText="Ctrl+O" Click="OpenDoc_Click" />
+                <!--<MenuItem x:Name="OpenDoc" Header="_Open Document" InputGestureText="Ctrl+O" Click="OpenDoc_Click" />-->
                 <MenuItem x:Name="SaveDoc" Header="_Save Document" InputGestureText="Ctrl+S" Click="SaveDoc_Click" />
                 <Separator />
                 <MenuItem x:Name="NewProj" Header="_New Project" Click="NewProj_Click" />
@@ -59,7 +59,7 @@
         <Label Content="Document" HorizontalAlignment="Left" Margin="10,23,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.577" Height="26" Width="65"/>
         <Label Content="Meta" Grid.Column="1" HorizontalAlignment="Left" Margin="10,23,0,0" VerticalAlignment="Top" Height="26" Width="37"/>
         <Label Content="Project" HorizontalAlignment="Left" Margin="10,9,0,0" Grid.Row="1" VerticalAlignment="Top" Height="26" Width="47"/>
-        <DataGrid x:Name="datagrid" ItemsSource="{Binding Instance.DocModels}" Margin="10,35,10,5" Grid.Row="1" AutoGenerateColumns="False" Grid.ColumnSpan="2" diag:PresentationTraceSources.TraceLevel="High">
+        <DataGrid x:Name="datagrid" ItemsSource="{Binding Instance.DocModels}" Margin="10,35,10,5" Grid.Row="1" AutoGenerateColumns="False" Grid.ColumnSpan="2" diag:PresentationTraceSources.TraceLevel="High" CurrentCellChanged="datagrid_CurrentCellChanged" SelectionMode="Single">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding RelativePath}" Header="File" IsReadOnly="True"/>
                 <DataGridTextColumn Binding="{Binding Snippet}" Header="Snipppet"/>

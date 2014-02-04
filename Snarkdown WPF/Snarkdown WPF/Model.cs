@@ -63,7 +63,16 @@ namespace Snarkdown_WPF
         public DocModel CurrentDocument
         {
             get { return currentDocument; }
-            set { currentDocument = value; NotifyPropertyChanged(); }
+            set
+            {
+                if (value != null && currentDocument != value)
+                {
+                    currentDocument = value;
+                    instance.Content = currentDocument.textContents;
+                    instance.Meta = currentDocument.meta;
+                    NotifyPropertyChanged();
+                }
+            }
         }
 
         public bool useDocWc = true;
