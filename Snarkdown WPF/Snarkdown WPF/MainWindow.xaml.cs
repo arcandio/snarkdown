@@ -58,8 +58,8 @@ namespace Snarkdown_WPF
             }
             if (File.Exists(returnedPath))
             {
-                Model.Instance.docModels = new System.Collections.ObjectModel.ObservableCollection<DocModel>();
-                Model.Instance.rootObject = null;
+                Model.Instance.DocModels = new System.Collections.ObjectModel.ObservableCollection<DocModel>();
+                Model.Instance.RootObject = null;
                 Model.Instance.LoadProject(returnedPath);
                 
                 //Model.Instance.rootObject = new DocModel(returnedPath);

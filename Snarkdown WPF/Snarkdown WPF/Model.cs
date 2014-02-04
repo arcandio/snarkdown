@@ -83,7 +83,7 @@ namespace Snarkdown_WPF
         public DocModel RootObject
         {
             get { return rootObject; }
-            set { }
+            set { currentDocument = value; NotifyPropertyChanged(); }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
