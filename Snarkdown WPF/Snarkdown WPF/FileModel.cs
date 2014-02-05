@@ -232,16 +232,16 @@ namespace Snarkdown_WPF
         /// </summary>
         /// <param name="path">filename to initialize</param>
         /// <param name="creator">the Project that this file belongs to</param>
-        public DocModel(string path)
+        public DocModel(string path, bool isRoot)
         {
-            Initialize(path);
+                Initialize(path, isRoot);
         }
 
         /// <summary>
         /// initialize an instance of DocModel that was not constructed with a path string.
         /// </summary>
         /// <param name="path">filename to initialize</param>
-        public void Initialize(string path)
+        public void Initialize(string path, bool isRoot)
         {
             //db.w(path);
             Model.Instance.docModels.Add(this);
@@ -257,7 +257,14 @@ namespace Snarkdown_WPF
             GetSnippet();
             GetKindleFileSize();
             GetMetaFile();
+            GetSummary();
             GetEditDate();
+
+            if (isRoot == true)
+            {
+                pathRelative = "ROOT DIR";
+                isVisible = false;
+            }
         }
 
         public void Update()
@@ -281,24 +288,28 @@ namespace Snarkdown_WPF
                 List<string> myChildren = Directory.EnumerateFileSystemEntries(pathFile).ToList<string>();
                 for (int i = 0; i < myChildren.Count; i++)
                 {
-                    // create new child
-                    DocModel fm = new DocModel(myChildren[i]);
-                    // add to my children
-                    if (children == null)
+                    // check if this is a valid file object to show
+                    if (DirectoryHelper.IsPathValidFile(myChildren[i]) == true)
                     {
-                        children = new ObservableCollection<DocModel>();
-                    }
-                    children.Add(fm);
-                    // set the new instance's model
-                    //fm.myProject = myProject;
+                        // create new child
+                        DocModel fm = new DocModel(myChildren[i], false);
+                        // add to my children
+                        if (children == null)
+                        {
+                            children = new ObservableCollection<DocModel>();
+                        }
+                        children.Add(fm);
+                        // set the new instance's model
+                        //fm.myProject = myProject;
 
-                    // add to list
-                    if (Model.Instance.docModels == null)
-                    {
-                        Model.Instance.docModels = new ObservableCollection<DocModel>();
+                        // add to list
+                        if (Model.Instance.docModels == null)
+                        {
+                            Model.Instance.docModels = new ObservableCollection<DocModel>();
+                        }
+                        Model.Instance.docModels.Add(fm);
+                        //db.w("doc models: " + Model.Instance.docModels.Count);
                     }
-                    Model.Instance.docModels.Add(fm);
-                    //db.w("doc models: " + Model.Instance.docModels.Count);
                 }
                 hasChildren = true;
             }
@@ -361,6 +372,7 @@ namespace Snarkdown_WPF
                         metaItemType = TreeItemType.Text;
                         break;
                     case ".meta":
+                    case ".mdmeta":
                         metaItemType = TreeItemType.Meta;
                         break;
                     case ".mobi":
@@ -460,7 +472,19 @@ namespace Snarkdown_WPF
             }
             textSnippet = sum;
         }
-
+        private void GetSummary ()
+        {
+            string sum = "";
+            if (meta != null && meta.Length > 50)
+            {
+                sum = meta.Substring(0, 49);
+            }
+            else
+            {
+                sum = meta;
+            }
+            metaSynopsis = sum;
+        }
         /// <summary>
         /// calculate the size of the item based on theoretical kindle formatting
         /// </summary>
@@ -510,14 +534,20 @@ namespace Snarkdown_WPF
         /// </summary>
         public void Save()
         {
+            // save the projec data.
+            Model.Instance.SaveProjectData();
             if (CheckFilePath(false))
             {
                 using (StreamWriter sw = new StreamWriter(pathFile))
                 {
                     sw.Write(textContents);
                 }
-                if (meta.Length > 0)
+                if (metaPath != null && meta.Length > 0)
                 {
+                    if (metaPath != null || metaPath.Length < 1)
+                    {
+                        metaPath = pathFile+".meta";
+                    }
                     using (StreamWriter sw = new StreamWriter(metaPath))
                     {
                         sw.Write(meta);

@@ -161,15 +161,33 @@ namespace Snarkdown_WPF
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+        public void ClearProject()
+        {
+            DocModels = new ObservableCollection<DocModel>();
+            CurrentDocument = new DocModel();
+            Content = "";
+            Meta = "";
+            RootObject = new DocModel();
+            ProjectPath = "";
+        }
+        public void SaveProjectData()
+        {
+            using (StreamWriter sw = new StreamWriter(rootObject.pathFile + "project.md"))
+            {
+                sw.Write(rootObject.textContents);
+            }
+        }
         public void LoadProject(string path)
         {
             // check if a file exists at the path
             if (File.Exists(path) == true || Directory.Exists(path))
             {
+                // clear
+                Model.Instance.ClearProject();
                 // if so, find a project path for it
                 projectPath = DirectoryHelper.GetRootDir(path);
                 //db.w(projectPath);
-                rootObject = new DocModel(projectPath);
+                rootObject = new DocModel(projectPath, true);
                 currentDocument = rootObject;
                 db.w("loaded: " + projectPath);
                 // we did not actually load a project, we tried to load a file

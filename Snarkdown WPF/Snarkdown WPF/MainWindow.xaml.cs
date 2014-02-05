@@ -7,17 +7,16 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Input;
+using System.Windows.Input;/*
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Windows.Shapes; // causes System.IO.Path to return nothing on directory queries
+*/
 using Microsoft.Win32;
 using System.IO;
 using Kiwi.Markdown;
 using Kiwi.Markdown.ContentProviders;
-//using BrightIdeasSoftware;
-//using ObjectListView;
 //using System.Windows.Forms;
 
 
@@ -43,30 +42,84 @@ namespace Snarkdown_WPF
 
         private void NewDoc_Click(object sender, RoutedEventArgs e)
         {
-            Model.Instance.currentDocument = new DocModel();
+            Model.Instance.CurrentDocument = new DocModel();
+            Model.Instance.DocModels.Add(Model.Instance.CurrentDocument);
         }
-
-        private void OpenDoc_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void SaveDoc_Click(object sender, RoutedEventArgs e)
         {
-            Model.Instance.currentDocument.Save();
+            if (Model.Instance.CurrentDocument.pathFile != null
+                || Model.Instance.CurrentDocument.pathFile != ""
+                || Model.Instance.CurrentDocument.pathFile.Length > 0)
+            {
+                // ask user for new path for this DocModel
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.Filter = "Markdown Files (.md)|*.md|Text Files (.txt)|*.txt|All Files (*.*)|*.*";
+                sfd.FilterIndex = 1;
+                sfd.Title = "Save As";
+                Nullable<bool> result = sfd.ShowDialog();
+                if (result == true)
+                {
+                    Model.Instance.CurrentDocument.pathFile = sfd.FileName;
+
+                }
+            }
+            if (Model.Instance.CurrentDocument.pathFile != null 
+                && Model.Instance.CurrentDocument.pathFile != ""
+                && Model.Instance.CurrentDocument.pathFile.Length > 0)
+            {
+                Model.Instance.CurrentDocument.Save();
+            }
         }
 
         private void NewProj_Click(object sender, RoutedEventArgs e)
         {
-            
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Snarkdown Project|*.*";
+            sfd.FilterIndex = 1;
+            sfd.Title = "Project Title";
+            sfd.FileName = "New Project Title";
+            //sfd.ShowNewFolderButton = true;
+            Nullable<bool> result = sfd.ShowDialog();
+            string returnedPath = "";
+            string projectTitle = "";
+            string projectPath = "";
+            string rootPath = "";
+            if (result == true)
+            {
+                returnedPath = sfd.FileName;
+                //projectPath = System.IO.Path.GetFullPath(returnedPath);
+                projectPath = System.IO.Path.GetDirectoryName(returnedPath);
+                projectTitle = System.IO.Path.GetFileNameWithoutExtension(returnedPath);
+                // create the file
+                rootPath = projectPath + "\\project.md";
+                try
+                {
+                    using (StreamWriter sw = new StreamWriter(rootPath))
+                    {
+                        sw.Write(" * Project Name: " + projectTitle);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    db.w("exception: " + ex);
+                }
+                // load the blank project in
+                if (File.Exists(rootPath))
+                {
+                    // clear all the documents and fields on Model.
+                    Model.Instance.LoadProject(rootPath);
+                }
+            }
+
         }
 
         private void OpenProj_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Markdown Files (.md, .txt)|*.md;*.txt|Text Files (.txt)|*.txt|All Files (*.*)|*.*";
+            ofd.Filter = "Markdown Files (.md, .txt)|*.md;*.txt;project.md.meta|Text Files (.txt)|*.txt|All Files (*.*)|*.*";
             ofd.FilterIndex = 1;
             ofd.Multiselect = false;
+            ofd.Title = "Open File or Project";
             Nullable<bool> result = ofd.ShowDialog();
             string returnedPath = "";
             if (result == true)
@@ -75,8 +128,7 @@ namespace Snarkdown_WPF
             }
             if (File.Exists(returnedPath))
             {
-                Model.Instance.DocModels = new System.Collections.ObjectModel.ObservableCollection<DocModel>();
-                Model.Instance.RootObject = null;
+                // clear all the documents and fields on Model.
                 Model.Instance.LoadProject(returnedPath);
             }
         }
@@ -97,6 +149,7 @@ namespace Snarkdown_WPF
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = "HTML file (.html|*.html";
             sfd.FilterIndex = 1;
+            sfd.Title = "Export Project";
             Nullable<bool> result =sfd.ShowDialog(); 
             if ( result == true )
             {

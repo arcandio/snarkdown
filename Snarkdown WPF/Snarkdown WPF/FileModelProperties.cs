@@ -65,7 +65,7 @@ namespace Snarkdown_WPF
         }
         public string Synopsis
         {
-            get { return meta; }
+            get { return metaSynopsis; }
             set { metaSynopsis = value; NotifyPropertyChanged(); }
         }
 
@@ -82,7 +82,7 @@ namespace Snarkdown_WPF
         }
         public string Meta
         {
-            get { return meta + "test2"; }
+            get { return meta; }
             set { meta = value; NotifyPropertyChanged(); }
         }
 

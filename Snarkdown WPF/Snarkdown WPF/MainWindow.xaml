@@ -63,7 +63,7 @@
             <Button Content="Edit Word Counts"/>
             <MenuItem Header="Wordcount"/>
         </StatusBar>
-        <TextBox x:Name="docview" TextWrapping="Wrap" Text="{Binding Instance.Content}" SpellCheck.IsEnabled="True" Margin="10,49,171,10"/>
+        <TextBox x:Name="docview" TextWrapping="Wrap" Text="{Binding Instance.Content}" SpellCheck.IsEnabled="True" Margin="10,49,105,10"/>
         <TextBox x:Name="metaview" TextWrapping="Wrap" Text="{Binding Instance.Meta}" Margin="10,49,10,10" Grid.Column="1"/>
         <GridSplitter Margin="0,21,0,0" Width="4"/>
         <GridSplitter HorizontalAlignment="Stretch" Height="4" VerticalAlignment="Top" ResizeDirection="Rows" Grid.Row="1" Grid.ColumnSpan="2"/>
@@ -81,7 +81,7 @@
                 <DataGridTextColumn Binding="{Binding TagOther}" Header="Tags"/>
             </DataGrid.Columns>
         </DataGrid>
-        <RichTextBox Margin="326,49,10,10">
+        <RichTextBox Margin="392,49,10,10">
             <FlowDocument>
                 <Paragraph>
                     <Run Text="RichTextBox"/>

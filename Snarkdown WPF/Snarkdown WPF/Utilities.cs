@@ -74,6 +74,7 @@ namespace Snarkdown_WPF
     }
     static class DirectoryHelper
     {
+        const string validFileTypes = ".md .mkdn .txt .markdown .mmd";
         /// <summary>
         /// Find the root directory of a given file
         /// </summary>
@@ -99,7 +100,7 @@ namespace Snarkdown_WPF
                     // check parent directories until we find "project.md.meta" or run out of depth
                     while (searchDepth > 0)
                     {
-                        if (File.Exists(modPath + "project.md.meta"))
+                        if (File.Exists(modPath + "project.md"))
                         {
                             // did find the project file in this directory
                             modPath = Path.GetDirectoryName(modPath);
@@ -169,6 +170,36 @@ namespace Snarkdown_WPF
             }
 
             return isOpen;
+        }
+        /// <summary>
+        /// check to see if our path is a valid object to display in our tree
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static bool IsPathValidFile (string path)
+        {
+            bool r = false;
+            string ex = Path.GetExtension(path);
+            // check if we have an extension
+            if (ex == "")
+            {
+                // no extension should mean a directory
+                if (Directory.Exists(path))
+                {
+                    r = true;
+                }
+            }
+            else
+            {
+                // we have an extension to check
+                if (validFileTypes.Contains(ex) == true)
+                {
+                    // we have an extension that we found in our list of extensions
+                    r = true;
+                }
+            }
+
+            return r;
         }
 
     }
