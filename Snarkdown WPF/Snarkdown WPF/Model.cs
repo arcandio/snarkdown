@@ -150,7 +150,9 @@ namespace Snarkdown_WPF
                 NotifyPropertyChanged();
             }
         }
+        public string exportPath = "";
 
+        // notification stuff
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {

@@ -36,6 +36,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="RandLang2">
+      <HintPath>..\..\..\..\RandLang2\RandLang2Lib\RandLang2\RandLang2\bin\Debug\RandLang2.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -101,49 +104,23 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <None Include="SampleProject\Chapter 1\scene.md">
+    <None Include="SampleProject\Chapter 1\scene.md" />
+    <None Include="SampleProject\Chapter 1\scene.md.meta" />
+    <None Include="SampleProject\Chapter 1\scene2.md" />
+    <None Include="SampleProject\Chapter 1\scene2.md.meta" />
+    <None Include="SampleProject\Chapter 2\scene.md" />
+    <None Include="SampleProject\Chapter 2\scene.md.meta" />
+    <None Include="SampleProject\Chapter 2\scene2.md" />
+    <None Include="SampleProject\Chapter 2\scene2.md.meta" />
+    <None Include="SampleProject\Chapter 3\scene.md" />
+    <None Include="SampleProject\Chapter 3\scene.md.meta" />
+    <None Include="SampleProject\Chapter 3\scene2.md" />
+    <None Include="SampleProject\Chapter 3\scene2.md.meta" />
+    <None Include="SampleProject\project.md.meta" />
+    <None Include="SampleProject\_titlepage.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="SampleProject\Chapter 1\scene.md.meta">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="SampleProject\Chapter 1\scene2.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="SampleProject\Chapter 1\scene2.md.meta">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="SampleProject\Chapter 2\scene.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="SampleProject\Chapter 2\scene.md.meta">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="SampleProject\Chapter 2\scene2.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="SampleProject\Chapter 2\scene2.md.meta">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="SampleProject\Chapter 3\scene.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="SampleProject\Chapter 3\scene.md.meta">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="SampleProject\Chapter 3\scene2.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="SampleProject\Chapter 3\scene2.md.meta">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="SampleProject\project.md.meta">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="SampleProject\titlepage.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="SampleProject\titlepage.md.meta">
+    <None Include="SampleProject\_titlepage.md.meta">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -154,9 +131,9 @@
     <Resource Include="snarkdown Icon 3 copy.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\..\Tools\_Programming\wpftreelistview_src\Aga.Controls\Aga.Controls.csproj">
-      <Project>{D17CD489-1B14-47EB-8C22-C189D078AEC9}</Project>
-      <Name>Aga.Controls</Name>
+    <ProjectReference Include="..\..\Kiwi.Markdown\Kiwi.Markdown.csproj">
+      <Project>{36c2c8f1-9b44-48c9-a281-e68e78ae2c91}</Project>
+      <Name>Kiwi.Markdown</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

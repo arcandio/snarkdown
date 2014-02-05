@@ -14,9 +14,12 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Win32;
 using System.IO;
+using Kiwi.Markdown;
+using Kiwi.Markdown.ContentProviders;
 //using BrightIdeasSoftware;
 //using ObjectListView;
 //using System.Windows.Forms;
+
 
 namespace Snarkdown_WPF
 {
@@ -50,7 +53,7 @@ namespace Snarkdown_WPF
 
         private void SaveDoc_Click(object sender, RoutedEventArgs e)
         {
-
+            Model.Instance.currentDocument.Save();
         }
 
         private void NewProj_Click(object sender, RoutedEventArgs e)
@@ -80,7 +83,38 @@ namespace Snarkdown_WPF
 
         private void ExportProj_Click(object sender, RoutedEventArgs e)
         {
-
+            // https://github.com/danielwertheim/kiwi/wiki/Use-with-Asp.Net-MVC
+            // http://stackoverflow.com/questions/8210974/markdownsharp-github-syntax-for-c-sharp-code
+            // compile all markdown files together
+            string compiledMD = "";
+            foreach (DocModel dm in Model.Instance.docModels)
+            {
+                // check that we should include this document
+                compiledMD += dm.textContents;
+                compiledMD += "\n";
+            }
+            // ask for a place to save
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "HTML file (.html|*.html";
+            sfd.FilterIndex = 1;
+            Nullable<bool> result =sfd.ShowDialog(); 
+            if ( result == true )
+            {
+                Model.Instance.exportPath = sfd.FileName;
+            }
+            if (Model.Instance.exportPath.Length > 0)
+            {
+                // set up our service and render to html
+                MarkdownService mds = new MarkdownService(new FileContentProvider(Model.Instance.ProjectPath));
+                //MarkdownService mds = new MarkdownService();
+                //db.w(mds.ToHtml(compiledMD));
+                // save html content to file
+                
+                using (StreamWriter sw = new StreamWriter(Model.Instance.exportPath))
+                {
+                    sw.Write(mds.ToHtml(compiledMD));
+                }
+            }
         }
 
         private void BackupProj_Click(object sender, RoutedEventArgs e)
@@ -110,7 +144,7 @@ namespace Snarkdown_WPF
         private void datagrid_CurrentCellChanged(object sender, EventArgs e)
         {
             // throws an error if you click on the last row...
-            if (datagrid.CurrentItem.ToString() != "{NewItemPlaceholder}")
+            if (datagrid.CurrentItem != null)
             {
                 DocModel i = (DocModel)datagrid.CurrentItem;
                 if (i != null)

@@ -21,7 +21,7 @@ namespace Snarkdown_WPF
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
-
+        
         public string RelativePath
         {
             get
@@ -122,5 +122,6 @@ namespace Snarkdown_WPF
                 NotifyPropertyChanged();
             }
         }
+        
     }
 }
