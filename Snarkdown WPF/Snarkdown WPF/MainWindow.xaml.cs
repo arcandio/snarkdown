@@ -14,12 +14,9 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Win32;
 using System.IO;
-using Kiwi.Markdown;
-using Kiwi.Markdown.ContentProviders;
-//using BrightIdeasSoftware;
-//using ObjectListView;
-//using System.Windows.Forms;
-
+//using Kiwi.Markdown;
+//using Kiwi.Markdown.ContentProviders;
+using Sundown;
 
 namespace Snarkdown_WPF
 {
@@ -105,14 +102,31 @@ namespace Snarkdown_WPF
             if (Model.Instance.exportPath.Length > 0)
             {
                 // set up our service and render to html
-                MarkdownService mds = new MarkdownService(new FileContentProvider(Model.Instance.ProjectPath));
-                //MarkdownService mds = new MarkdownService();
-                //db.w(mds.ToHtml(compiledMD));
+                //MarkdownService mds = new MarkdownService(new FileContentProvider(Model.Instance.ProjectPath));
                 // save html content to file
-                
-                using (StreamWriter sw = new StreamWriter(Model.Instance.exportPath))
+                ClrBuffer sb = new ClrBuffer();
+                //byte[] ba;
+                MarkdownExtensions mdx = new MarkdownExtensions();
+                mdx.Autolink = true;
+                mdx.FencedCode = true;
+                mdx.LaxSpacing = true;
+                mdx.NoIntraEmphasis = true;
+                mdx.SpaceHeaders = true;
+                mdx.Strikethrough = true;
+                mdx.SuperScript = true;
+                mdx.Tables = true;
+                HtmlRenderer mdr = new HtmlRenderer();
+                Markdown md = new Markdown(mdr, mdx);
+                // http://txdv.github.io/sundown.net/Sundown/ClrBuffer.html
+                using (ClrBuffer buffer = (ClrBuffer)ClrBuffer.Create(1024*1024))
                 {
-                    sw.Write(mds.ToHtml(compiledMD));
+                    md.Render(buffer, compiledMD);
+
+                    using (StreamWriter sw = new StreamWriter(Model.Instance.exportPath))
+                    {
+                        //sw.Write(mds.ToHtml(compiledMD));
+                        sw.Write(buffer);
+                    }
                 }
             }
         }
