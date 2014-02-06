@@ -13,6 +13,8 @@ using System.IO;
 using System.IO.Compression;
 using Kiwi.Markdown;
 using Kiwi.Markdown.ContentProviders;
+using System.Windows.Markup;
+using System.Xml;
 /*
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -38,6 +40,10 @@ namespace Snarkdown_WPF
             //Model.Instance.LoadProject(@"SampleProject"); // debuggery
             columnWidth = collapseCol.Width;
             rowHeight = collapseRow.Height;
+            Model.Instance.ConvertContentStringToXaml(Model.Instance.currentDocument.textContents);
+            StringReader sr = new StringReader(Model.Instance.xamlString);
+            XmlReader xr = XmlReader.Create(sr);
+            rtb.Document = (FlowDocument)XamlReader.Load(xr);
         }
 
         private void NewDoc_Click(object sender, RoutedEventArgs e)
