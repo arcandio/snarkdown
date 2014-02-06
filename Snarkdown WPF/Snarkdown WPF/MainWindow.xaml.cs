@@ -7,18 +7,18 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Input;/*
+using System.Windows.Input;
+using Microsoft.Win32;
+using System.IO;
+using System.IO.Compression;
+using Kiwi.Markdown;
+using Kiwi.Markdown.ContentProviders;
+/*
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes; // causes System.IO.Path to return nothing on directory queries
 */
-using Microsoft.Win32;
-using System.IO;
-using Kiwi.Markdown;
-using Kiwi.Markdown.ContentProviders;
-//using System.Windows.Forms;
-
 
 namespace Snarkdown_WPF
 {
@@ -172,7 +172,15 @@ namespace Snarkdown_WPF
 
         private void BackupProj_Click(object sender, RoutedEventArgs e)
         {
-
+            string projectPathParent = Directory.GetParent(Model.Instance.projectPath).ToString();
+            string backupTitle = Path.GetFileName(Model.Instance.projectPath); // TODO: should be project name
+            backupTitle += DateTime.Now.ToString("-yyyy-MMdd-HHmm");
+            string backupPath = projectPathParent + @"\" + backupTitle + ".zip";
+            if (File.Exists(backupPath))
+            {
+                backupPath = backupPath.Replace(".zip", "-" + DateTime.Now.Second + ".zip");
+            }
+            ZipFile.CreateFromDirectory(Model.Instance.projectPath, backupPath, CompressionLevel.Fastest, true);
         }
 
         private void Fullscreen_Click(object sender, ExecutedRoutedEventArgs e)
