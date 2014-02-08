@@ -314,7 +314,7 @@ namespace Snarkdown_WPF
                 */
                 mw.rtb.Document.Blocks.Clear();
                 mw.rtb.AppendText(Content);
-                mw.rtb.Document = GfmSyntaxProvider.CheckAllBlocks(mw.rtb.Document);
+                GfmSyntaxProvider.CheckAllBlocks();
                 NotifyPropertyChanged();
             }
         }

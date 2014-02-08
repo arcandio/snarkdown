@@ -81,7 +81,7 @@
                 <DataGridTextColumn Binding="{Binding TagOther}" Header="Tags"/>
             </DataGrid.Columns>
         </DataGrid>
-        <RichTextBox x:Name="rtb" Margin="319,49,10,10" Block.LineHeight="1">
+        <RichTextBox x:Name="rtb" Margin="319,49,10,10" Block.LineHeight="1" KeyUp="Rtb_KeyUp">
             <FlowDocument>
                 <Paragraph>
                     <Run Text="RichTextBox"/>

@@ -13,7 +13,7 @@ using System.IO;
 using System.IO.Compression;
 using Kiwi.Markdown;
 using Kiwi.Markdown.ContentProviders;
-
+using GfmSyntax;
 /*
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -35,11 +35,11 @@ namespace Snarkdown_WPF
 
         public MainWindow()
         {
+            Model.Instance.mw = this;
             InitializeComponent();
             //Model.Instance.LoadProject(@"SampleProject"); // debuggery
             columnWidth = collapseCol.Width;
             rowHeight = collapseRow.Height;
-            Model.Instance.mw = this;
         }
 
         private void NewDoc_Click(object sender, RoutedEventArgs e)
@@ -217,6 +217,13 @@ namespace Snarkdown_WPF
                 //db.w(""+i);
             }
         }
+
+        private void Rtb_KeyUp(object sender, RoutedEventArgs e)
+        {
+            db.w("caught changed args");
+            GfmSyntaxProvider.CheckAllBlocks();
+        }
+
     }
     public static class Commands
     {
