@@ -8,6 +8,10 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
+using System.Windows.Documents;
+using System.Windows.Markup;
+using System.Xml;
+using GfmSyntax;
 
 namespace Snarkdown_WPF
 {
@@ -30,6 +34,7 @@ namespace Snarkdown_WPF
     public sealed class Model : INotifyPropertyChanged
     {
         #region Fields
+        public MainWindow mw;
         /// <summary>
         /// Singleton instance
         /// </summary>
@@ -164,7 +169,8 @@ namespace Snarkdown_WPF
         {
             // http://msdn.microsoft.com/en-us/library/system.windows.documents.flowdocument(v=vs.110).aspx
             watch = Stopwatch.StartNew();
-            c = "# heading\n*italic*\n**bold**\ntest normal *test *test test _text_ text ~~text~~ test test text?\nanother _text_ para*graph*\n * list test\n + listtest2?";
+            //c = "# heading\n*italic*\n**bold**\ntest normal *test *test test _text_ text ~~text~~ test test text?\nanother _text_ para*graph*\n * list test\n + listtest2?";
+            c = Model.Instance.CurrentDocument.TextContents;
             string tempXaml = "";
             // convert string to xaml markup
             string[] lines;
@@ -177,14 +183,16 @@ namespace Snarkdown_WPF
                 // foreach line
                 for (int i = 0; i < lines.Length; i++ )
                 {
+                    /*
                     bool starOpen = false;
                     bool underOpen = false;
                     bool starOpenD = false;
                     bool underOpenD = false;
-
+                    */
                     string line = lines[i];
                     if (GfmSyntaxProvider.StringContainsTags(line) == true)
                     {
+                        /*
                         // break string into words by space
                         string[] splitter = { " " };
                         string[] words = line.Split(splitter, StringSplitOptions.None);
@@ -192,7 +200,7 @@ namespace Snarkdown_WPF
                         foreach (string s in words)
                         {
 
-                        }
+                        }*/
                         // foreach tag in list
                         // if contains tag, add xaml tag on outside
                     }
@@ -237,6 +245,23 @@ namespace Snarkdown_WPF
 
 
         }
+        public void CheckAllBlocks(Section sec)
+        {
+            Block[] bs = new Block[sec.Blocks.Count];
+            sec.Blocks.CopyTo(bs,0);
+            if (sec.Blocks.Count > 0 )
+            {
+                for (int i = 0; i < bs.Length; i++)
+                {
+                    CheckBlock(bs[i]);
+                }
+            }
+        }
+        public void CheckBlock(Block block)
+        {
+
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
@@ -281,6 +306,15 @@ namespace Snarkdown_WPF
                 }
                 Content = currentDocument.textContents;
                 Meta = currentDocument.meta;
+                /*
+                Model.Instance.ConvertContentStringToXaml(" ");
+                StringReader sr = new StringReader(Model.Instance.xamlString);
+                XmlReader xr = XmlReader.Create(sr);
+                mw.rtb.Document = (FlowDocument)XamlReader.Load(xr);
+                */
+                mw.rtb.Document.Blocks.Clear();
+                mw.rtb.AppendText(Content);
+                mw.rtb.Document = GfmSyntaxProvider.CheckAllBlocks(mw.rtb.Document);
                 NotifyPropertyChanged();
             }
         }

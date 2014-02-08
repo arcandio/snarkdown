@@ -36,9 +36,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="RandLang2">
-      <HintPath>..\..\..\..\RandLang2\RandLang2Lib\RandLang2\RandLang2\bin\Debug\RandLang2.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
