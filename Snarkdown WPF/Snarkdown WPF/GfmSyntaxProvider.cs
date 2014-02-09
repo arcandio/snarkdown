@@ -62,24 +62,29 @@ namespace GfmSyntax
                 tr.ClearAllProperties();
                 foreach (GfmSyntaxRule rule in theme.rules)
                 {
-                    MatchCollection matches = Regex.Matches(ptext, rule.regex);
-                    TextRange[] markups = new TextRange[matches.Count];
+                    rule.matches = Regex.Matches(ptext, rule.regex);
+                    rule.markups = new TextRange[rule.matches.Count];
                     
-                    for (int i = 0; i < matches.Count; i++)
+                    for (int i = 0; i < rule.matches.Count; i++)
                     {
-                        Match match = matches[i];
+                        Match match = rule.matches[i];
                         
                         TextPointer start = tr.Start.GetPositionAtOffset(match.Captures[0].Index);
                         TextPointer end = tr.Start.GetPositionAtOffset(match.Captures[0].Index + match.Captures[0].Length);
 
                         TextRange matchRange = new TextRange(start, end);
-                        markups[i] = matchRange;
+                        rule.markups[i] = matchRange;
                     }
 
-                    for (int i = 0; i < matches.Count; i++)
+
+                }
+                foreach (GfmSyntaxRule rule in theme.rules)
+                {
+
+                    for (int i = 0; i < rule.matches.Count; i++)
                     {
 
-                        markups[i].ApplyPropertyValue(TextElement.BackgroundProperty, new SolidColorBrush(rule.color));
+                        rule.markups[i].ApplyPropertyValue(TextElement.BackgroundProperty, new SolidColorBrush(rule.color));
                     }
                 }
             }
@@ -115,6 +120,8 @@ namespace GfmSyntax
         internal string regex;
         internal Style style;
         internal Color color;
+        internal MatchCollection matches;
+        internal TextRange[] markups;
 
         internal GfmSyntaxRule() { }
         internal GfmSyntaxRule (string reg, Style sty, Color col)
