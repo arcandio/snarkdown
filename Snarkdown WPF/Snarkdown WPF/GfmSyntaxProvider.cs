@@ -96,7 +96,6 @@ namespace GfmSyntax
                     {
                         for (int i = 0; i < rule.matches.Count; i++)
                         {
-
                             rule.markups[i].ApplyPropertyValue(TextElement.BackgroundProperty, new SolidColorBrush(rule.color));
                         }
                     }
@@ -111,7 +110,7 @@ namespace GfmSyntax
             rtb.CaretPosition = tp;
             // stop stopwatch for performance check
             st.Stop();
-            db.w(" elapsed " + st.Elapsed);
+            //db.w(" elapsed " + st.Elapsed);
         }
         
     }
@@ -126,52 +125,52 @@ namespace GfmSyntax
         internal GfmColorTheme ()
         {
             // emphasis/italic
-            rules.Add(new GfmSyntaxRule(@"((?<=\s*)(\*[\w ]+?\*))|((?<=\s)(_[\w ]+?_))", new Style(), Colors.Cyan, false));
-            //rules.Add(new GfmSyntaxRule(@"(?<=\s)(_[\w ]+_)", new Style(), Colors.Cyan));
+            rules.Add(new GfmSyntaxRule(@"((?<=\s*)(\*[\w ]+?\*))|((?<=\s)(_[\w ]+?_))", Colors.Cyan, false));
+            //rules.Add(new GfmSyntaxRule(@"(?<=\s)(_[\w ]+_)",  Colors.Cyan));
             // strong/bold
-            rules.Add(new GfmSyntaxRule(@"((?<=\s)(\*\*[\w ]+?\*\*))|((?<=\s)(__[\w ]+?__))", new Style(), Colors.Blue, false));
-            //rules.Add(new GfmSyntaxRule(@"(?<=\s)(__[\w ]+__)", new Style(), Colors.Blue));
+            rules.Add(new GfmSyntaxRule(@"((?<=\s)(\*\*[\w ]+?\*\*))|((?<=\s)(__[\w ]+?__))",  Colors.Blue, false));
+            //rules.Add(new GfmSyntaxRule(@"(?<=\s)(__[\w ]+__)",  Colors.Blue));
             // monospace
-            rules.Add(new GfmSyntaxRule(@"(?<=\s)(`[\w ]+?`)", new Style(), Colors.Green, false));
+            rules.Add(new GfmSyntaxRule(@"(?<=\s)(`[\w ]+?`)",  Colors.Green, false));
             // strike
-            rules.Add(new GfmSyntaxRule(@"(?<=\s)(~~[\w ]+?~~)", new Style(), Colors.Red, false));
+            rules.Add(new GfmSyntaxRule(@"(?<=\s)(~~[\w ]+?~~)",  Colors.Red, false));
             // comment
-            rules.Add(new GfmSyntaxRule(@"(<!--.+?-->)", new Style(), Colors.Green, false));
+            rules.Add(new GfmSyntaxRule(@"(<!--.+?-->)",  Colors.Green, false));
             // header
-            rules.Add(new GfmSyntaxRule(@"((?<=^{2,})#+.+)", new Style(), Colors.Orange, false));
-            //rules.Add(new GfmSyntaxRule(@"(.+[\r\r\n\n][=-]+[\r\r\n\n])|((?<=[\r\r\n\n]{2,})#+.+)", new Style(), Colors.Orange));
+            rules.Add(new GfmSyntaxRule(@"((?<=^{2,})#+.+)",  Colors.Orange, false));
+            //rules.Add(new GfmSyntaxRule(@"(.+[\r\r\n\n][=-]+[\r\r\n\n])|((?<=[\r\r\n\n]{2,})#+.+)",  Colors.Orange));
             // math
-            rules.Add(new GfmSyntaxRule(@"(?<=\s)(\$.+?\$)", new Style(), Colors.Red, false));
+            rules.Add(new GfmSyntaxRule(@"(?<=\s)(\$.+?\$)",  Colors.Red, false));
             // link
             // http://blog.mattheworiordan.com/post/13174566389/url-regular-expression-for-links-with-or-without-the
-            rules.Add(new GfmSyntaxRule(@"((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)", new Style(), Colors.Blue, false));
+            rules.Add(new GfmSyntaxRule(@"((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)",  Colors.Blue, false));
 
             // header
-            rules.Add(new GfmSyntaxRule(@"(?m)(^.+$)\W(^[=-]+$)", new Style(), Colors.Orange, false));
+            rules.Add(new GfmSyntaxRule(@"(?m)(^.+$)\W(^[=-]+$)",  Colors.Orange, false));
             // list
-            rules.Add(new GfmSyntaxRule(@"((?<=[\r\r\n\n])[ \t]+.*)+([\r\r\n\n][ \t]+.*)*", new Style(), Colors.Red, true));
+            rules.Add(new GfmSyntaxRule(@"((?<=[\r\r\n\n])[ \t]+.*)+([\r\r\n\n][ \t]+.*)*",  Colors.Red, true));
             // block quote
-            rules.Add(new GfmSyntaxRule(@"((?<=[\r\r\n\n])>.*)([\r\r\n\n]>.*)*", new Style(), Colors.Red, true));
+            rules.Add(new GfmSyntaxRule(@"((?<=[\r\r\n\n])>.*)([\r\r\n\n]>.*)*",  Colors.Red, true));
             // code block
-            rules.Add(new GfmSyntaxRule(@"(?<=[\r\r\n\n])((```[\d\D]+?```)|(~~~[\d\D]+?~~~))", new Style(), Colors.Red, true));
+            rules.Add(new GfmSyntaxRule(@"(?<=[\r\r\n\n])((```[\d\D]+?```)|(~~~[\d\D]+?~~~))",  Colors.Red, true));
             // table
-            rules.Add(new GfmSyntaxRule(@"((?<=[\r\r\n\n]).+)([\r\r\n\n][-]+[- ]*)([\r\r\n\n].+)*", new Style(), Colors.Red, true));
+            rules.Add(new GfmSyntaxRule(@"((?<=[\r\r\n\n]).+)([\r\r\n\n][-]+[- ]*)([\r\r\n\n].+)*",  Colors.Red, true));
         }
     }
     internal class GfmSyntaxRule
     {
         internal string regex;
-        internal Style style;
+        //internal Style style;
         internal Color color;
         internal MatchCollection matches;
         internal TextRange[] markups;
         internal bool isParagraph;
 
-        internal GfmSyntaxRule() { }
-        internal GfmSyntaxRule (string reg, Style sty, Color col, bool isPara)
+        //internal GfmSyntaxRule() { }
+        internal GfmSyntaxRule (string reg, /*Style sty,*/ Color col, bool isPara)
         {
             regex = reg;
-            style = sty;
+            //style = sty;
             color = col;
             isParagraph = isPara;
         }

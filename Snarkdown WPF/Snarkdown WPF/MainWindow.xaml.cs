@@ -222,7 +222,7 @@ namespace Snarkdown_WPF
 
         private void Rtb_KeyUp(object sender, RoutedEventArgs e)
         {
-            db.w("caught changed args");
+            //db.w("caught changed args");
             Model.Instance.gfm.CheckAllBlocks();
         }
 
