@@ -51,9 +51,9 @@ namespace Snarkdown_WPF
         }
         private void SaveDoc_Click(object sender, RoutedEventArgs e)
         {
-            if (Model.Instance.CurrentDocument.pathFile != null
-                || Model.Instance.CurrentDocument.pathFile != ""
-                || Model.Instance.CurrentDocument.pathFile.Length > 0)
+            if (Model.Instance.CurrentDocument.pathFile == null
+                || Model.Instance.CurrentDocument.pathFile == ""
+                || Model.Instance.CurrentDocument.pathFile.Length < 1)
             {
                 // ask user for new path for this DocModel
                 SaveFileDialog sfd = new SaveFileDialog();
@@ -64,15 +64,15 @@ namespace Snarkdown_WPF
                 if (result == true)
                 {
                     Model.Instance.CurrentDocument.pathFile = sfd.FileName;
-
                 }
             }
-            if (Model.Instance.CurrentDocument.pathFile != null 
+            if (Model.Instance.CurrentDocument.pathFile != null
                 && Model.Instance.CurrentDocument.pathFile != ""
                 && Model.Instance.CurrentDocument.pathFile.Length > 0)
             {
                 Model.Instance.CurrentDocument.Save();
             }
+
         }
 
         private void NewProj_Click(object sender, RoutedEventArgs e)

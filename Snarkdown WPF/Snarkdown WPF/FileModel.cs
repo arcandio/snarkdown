@@ -332,7 +332,7 @@ namespace Snarkdown_WPF
         /// </summary>
         private void GetContents()
         {
-            if (CheckFilePath(true) && metaItemType == TreeItemType.Text)
+            if (CheckFilePath(true) && (metaItemType == TreeItemType.Text || metaItemType == TreeItemType.Project))
             {
                 // check item type
                 if (metaItemType == TreeItemType.None)
@@ -341,7 +341,7 @@ namespace Snarkdown_WPF
                 }
 
                 // load file
-                if (metaItemType == TreeItemType.Text)
+                if (metaItemType == TreeItemType.Text || metaItemType == TreeItemType.Project)
                 {
                     using (StreamReader sr = new StreamReader(pathFile))
                     {

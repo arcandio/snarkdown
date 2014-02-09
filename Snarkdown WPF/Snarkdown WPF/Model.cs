@@ -190,7 +190,7 @@ namespace Snarkdown_WPF
         }
         public void SaveProjectData()
         {
-            using (StreamWriter sw = new StreamWriter(rootObject.pathFile + "project.md"))
+            using (StreamWriter sw = new StreamWriter(rootObject.pathFile + "\\project.md"))
             {
                 sw.Write(rootObject.textContents);
             }
