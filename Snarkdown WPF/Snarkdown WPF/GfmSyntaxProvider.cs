@@ -20,18 +20,19 @@ namespace GfmSyntax
 {
     public class GfmSyntaxProvider
     {
+        // http://msdn.microsoft.com/en-us/library/system.windows.documents.flowdocument(v=vs.110).aspx
+        // http://msdn.microsoft.com/en-us/library/system.windows.documents.textrange(v=vs.110).aspx
+        // http://msdn.microsoft.com/en-us/library/system.windows.documents.inline(v=vs.110).aspx
+        // http://msdn.microsoft.com/en-us/library/system.windows.documents.block(v=vs.110).aspx
+        // http://msdn.microsoft.com/en-us/library/system.windows.documents.paragraph(v=vs.110).aspx
+        // http://msdn.microsoft.com/en-us/library/system.windows.controls.richtextbox.caretposition(v=vs.110).aspx
+        // http://msdn.microsoft.com/en-us/library/system.windows.documents.textpointer.getinsertionposition(v=vs.110).aspx
+        // http://msdn.microsoft.com/en-us/library/ms745683(v=vs.110).aspx
+        // http://msdn.microsoft.com/en-us/library/system.windows.style(v=vs.110).aspx
+        // http://msdn.microsoft.com/en-us/library/system.text.regularexpressions.match(v=vs.110).aspx
 
         GfmColorTheme theme;
-         // http://msdn.microsoft.com/en-us/library/system.windows.documents.flowdocument(v=vs.110).aspx
-         // http://msdn.microsoft.com/en-us/library/system.windows.documents.textrange(v=vs.110).aspx
-         // http://msdn.microsoft.com/en-us/library/system.windows.documents.inline(v=vs.110).aspx
-         // http://msdn.microsoft.com/en-us/library/system.windows.documents.block(v=vs.110).aspx
-         // http://msdn.microsoft.com/en-us/library/system.windows.documents.paragraph(v=vs.110).aspx
-         // http://msdn.microsoft.com/en-us/library/system.windows.controls.richtextbox.caretposition(v=vs.110).aspx
-         // http://msdn.microsoft.com/en-us/library/system.windows.documents.textpointer.getinsertionposition(v=vs.110).aspx
-         // http://msdn.microsoft.com/en-us/library/ms745683(v=vs.110).aspx
-         // http://msdn.microsoft.com/en-us/library/system.windows.style(v=vs.110).aspx
-         // http://msdn.microsoft.com/en-us/library/system.text.regularexpressions.match(v=vs.110).aspx
+        List<string> parsCache;
          
         public GfmSyntaxProvider()
         {
@@ -55,50 +56,62 @@ namespace GfmSyntax
             // replace rtb? http://msdn.microsoft.com/en-us/library/system.windows.controls.flowdocumentscrollviewer(v=vs.110).aspx
             // http://stackoverflow.com/questions/2068120/c-sharp-cast-entire-array
             Paragraph[] pars = Array.ConvertAll<Block,Paragraph>(fd.Blocks.ToArray<Block>(), item => (Paragraph)item);
-            
-            foreach (Paragraph p in pars)
+            List<string> tempCache = new List<string>();
+
+            for (int r = 0; r < pars.Length; r++)
             {
+                // get current paragraph and current paragraph text
+                Paragraph p = pars[r];
                 string ptext = new TextRange(p.ContentStart, p.ContentEnd).Text;
+                // check to see if our paragraphtext is unchanged, and should we skip parsing
+                if (parsCache != null && r < parsCache.Count && ptext == parsCache[r])
+                {
+                    continue;
+                }
+                tempCache.Add(ptext);
                 TextRange tr = new TextRange(p.ContentStart, p.ContentEnd);
                 tr.ClearAllProperties();
                 foreach (GfmSyntaxRule rule in theme.rules)
                 {
-                    rule.matches = Regex.Matches(ptext, rule.regex);
-                    rule.markups = new TextRange[rule.matches.Count];
-                    
-                    for (int i = 0; i < rule.matches.Count; i++)
+                    if (rule.isParagraph != true)
                     {
-                        Match match = rule.matches[i];
-                        
-                        TextPointer start = tr.Start.GetPositionAtOffset(match.Captures[0].Index);
-                        TextPointer end = tr.Start.GetPositionAtOffset(match.Captures[0].Index + match.Captures[0].Length);
+                        rule.matches = Regex.Matches(ptext, rule.regex);
+                        rule.markups = new TextRange[rule.matches.Count];
 
-                        TextRange matchRange = new TextRange(start, end);
-                        rule.markups[i] = matchRange;
+                        for (int i = 0; i < rule.matches.Count; i++)
+                        {
+                            Match match = rule.matches[i];
+
+                            TextPointer start = tr.Start.GetPositionAtOffset(match.Captures[0].Index);
+                            TextPointer end = tr.Start.GetPositionAtOffset(match.Captures[0].Index + match.Captures[0].Length);
+
+                            TextRange matchRange = new TextRange(start, end);
+                            rule.markups[i] = matchRange;
+                        }
                     }
-
-
                 }
                 foreach (GfmSyntaxRule rule in theme.rules)
                 {
-
-                    for (int i = 0; i < rule.matches.Count; i++)
+                    if (rule.isParagraph != true)
                     {
+                        for (int i = 0; i < rule.matches.Count; i++)
+                        {
 
-                        rule.markups[i].ApplyPropertyValue(TextElement.BackgroundProperty, new SolidColorBrush(rule.color));
+                            rule.markups[i].ApplyPropertyValue(TextElement.BackgroundProperty, new SolidColorBrush(rule.color));
+                        }
                     }
                 }
+                // done parsing styles INSIDE paragraphs
             }
-            
+            // place our newly constructed paragraph cache
+            parsCache = tempCache;
+            // reset our document, just to be sure it updates in the view
+            rtb.Document = fd;
+            // restore our caret position
+            rtb.CaretPosition = tp;
+            // stop stopwatch for performance check
             st.Stop();
             db.w(" elapsed " + st.Elapsed);
-            rtb.Document = fd;
-            /*
-            rtb.CaretPosition = rtb.CaretPosition.DocumentStart;
-            pointer = cursor.End.GetOffsetToPosition(rtb.Document.ContentStart) * -1;
-            rtb.CaretPosition = rtb.CaretPosition.GetPositionAtOffset(pointer, dir);
-            */
-            rtb.CaretPosition = tp;
         }
         
     }
@@ -113,12 +126,36 @@ namespace GfmSyntax
         internal GfmColorTheme ()
         {
             // emphasis/italic
-            rules.Add(new GfmSyntaxRule(@"[ \n\r](\*[\w ]+\*)", new Style(), Colors.Red));
-            rules.Add(new GfmSyntaxRule(@" (_\w+_)", new Style(), Colors.Blue));
+            rules.Add(new GfmSyntaxRule(@"((?<=\s*)(\*[\w ]+?\*))|((?<=\s)(_[\w ]+?_))", new Style(), Colors.Cyan, false));
+            //rules.Add(new GfmSyntaxRule(@"(?<=\s)(_[\w ]+_)", new Style(), Colors.Cyan));
             // strong/bold
-            rules.Add(new GfmSyntaxRule(@" (\*\*\w+\*\*)", new Style(), Colors.Green));
-            // 
+            rules.Add(new GfmSyntaxRule(@"((?<=\s)(\*\*[\w ]+?\*\*))|((?<=\s)(__[\w ]+?__))", new Style(), Colors.Blue, false));
+            //rules.Add(new GfmSyntaxRule(@"(?<=\s)(__[\w ]+__)", new Style(), Colors.Blue));
+            // monospace
+            rules.Add(new GfmSyntaxRule(@"(?<=\s)(`[\w ]+?`)", new Style(), Colors.Green, false));
+            // strike
+            rules.Add(new GfmSyntaxRule(@"(?<=\s)(~~[\w ]+?~~)", new Style(), Colors.Red, false));
+            // comment
+            rules.Add(new GfmSyntaxRule(@"(<!--.+?-->)", new Style(), Colors.Green, false));
+            // header
+            rules.Add(new GfmSyntaxRule(@"((?<=^{2,})#+.+)", new Style(), Colors.Orange, false));
+            //rules.Add(new GfmSyntaxRule(@"(.+[\r\r\n\n][=-]+[\r\r\n\n])|((?<=[\r\r\n\n]{2,})#+.+)", new Style(), Colors.Orange));
+            // math
+            rules.Add(new GfmSyntaxRule(@"(?<=\s)(\$.+?\$)", new Style(), Colors.Red, false));
+            // link
+            // http://blog.mattheworiordan.com/post/13174566389/url-regular-expression-for-links-with-or-without-the
+            rules.Add(new GfmSyntaxRule(@"((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)", new Style(), Colors.Blue, false));
 
+            // header
+            rules.Add(new GfmSyntaxRule(@"(?m)(^.+$)\W(^[=-]+$)", new Style(), Colors.Orange, false));
+            // list
+            rules.Add(new GfmSyntaxRule(@"((?<=[\r\r\n\n])[ \t]+.*)+([\r\r\n\n][ \t]+.*)*", new Style(), Colors.Red, true));
+            // block quote
+            rules.Add(new GfmSyntaxRule(@"((?<=[\r\r\n\n])>.*)([\r\r\n\n]>.*)*", new Style(), Colors.Red, true));
+            // code block
+            rules.Add(new GfmSyntaxRule(@"(?<=[\r\r\n\n])((```[\d\D]+?```)|(~~~[\d\D]+?~~~))", new Style(), Colors.Red, true));
+            // table
+            rules.Add(new GfmSyntaxRule(@"((?<=[\r\r\n\n]).+)([\r\r\n\n][-]+[- ]*)([\r\r\n\n].+)*", new Style(), Colors.Red, true));
         }
     }
     internal class GfmSyntaxRule
@@ -128,13 +165,15 @@ namespace GfmSyntax
         internal Color color;
         internal MatchCollection matches;
         internal TextRange[] markups;
+        internal bool isParagraph;
 
         internal GfmSyntaxRule() { }
-        internal GfmSyntaxRule (string reg, Style sty, Color col)
+        internal GfmSyntaxRule (string reg, Style sty, Color col, bool isPara)
         {
             regex = reg;
             style = sty;
             color = col;
+            isParagraph = isPara;
         }
     }
 }

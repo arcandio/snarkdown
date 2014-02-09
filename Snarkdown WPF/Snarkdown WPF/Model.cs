@@ -160,7 +160,7 @@ namespace Snarkdown_WPF
         public string exportPath = "";
 
         public string xamlString = "";
-        Stopwatch watch;
+        //Stopwatch watch;
         public GfmSyntaxProvider gfm;
 
         #endregion
