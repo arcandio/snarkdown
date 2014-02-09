@@ -32,10 +32,12 @@ namespace Snarkdown_WPF
         public bool IsFullscreen { get; set; }
         GridLength columnWidth;
         GridLength rowHeight;
+        
 
         public MainWindow()
         {
             Model.Instance.mw = this;
+            Model.Instance.gfm = new GfmSyntaxProvider();
             InitializeComponent();
             //Model.Instance.LoadProject(@"SampleProject"); // debuggery
             columnWidth = collapseCol.Width;
@@ -221,7 +223,7 @@ namespace Snarkdown_WPF
         private void Rtb_KeyUp(object sender, RoutedEventArgs e)
         {
             db.w("caught changed args");
-            GfmSyntaxProvider.CheckAllBlocks();
+            Model.Instance.gfm.CheckAllBlocks();
         }
 
     }

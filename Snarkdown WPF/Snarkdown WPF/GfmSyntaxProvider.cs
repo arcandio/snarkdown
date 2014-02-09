@@ -14,21 +14,30 @@ using System.Windows.Media;
 using Snarkdown_WPF;
 using System.Windows.Controls;
 using System.Text.RegularExpressions;
+using System.Windows;
 
 namespace GfmSyntax
 {
     public class GfmSyntaxProvider
     {
-        /* http://msdn.microsoft.com/en-us/library/system.windows.documents.flowdocument(v=vs.110).aspx
-         * http://msdn.microsoft.com/en-us/library/system.windows.documents.textrange(v=vs.110).aspx
-         * http://msdn.microsoft.com/en-us/library/system.windows.documents.inline(v=vs.110).aspx
-         * http://msdn.microsoft.com/en-us/library/system.windows.documents.block(v=vs.110).aspx
-         * http://msdn.microsoft.com/en-us/library/system.windows.documents.paragraph(v=vs.110).aspx
-         * http://msdn.microsoft.com/en-us/library/system.windows.controls.richtextbox.caretposition(v=vs.110).aspx
-         * http://msdn.microsoft.com/en-us/library/system.windows.documents.textpointer.getinsertionposition(v=vs.110).aspx
-         * 
-         */
-        static public void CheckAllBlocks()
+
+        GfmColorTheme theme;
+         // http://msdn.microsoft.com/en-us/library/system.windows.documents.flowdocument(v=vs.110).aspx
+         // http://msdn.microsoft.com/en-us/library/system.windows.documents.textrange(v=vs.110).aspx
+         // http://msdn.microsoft.com/en-us/library/system.windows.documents.inline(v=vs.110).aspx
+         // http://msdn.microsoft.com/en-us/library/system.windows.documents.block(v=vs.110).aspx
+         // http://msdn.microsoft.com/en-us/library/system.windows.documents.paragraph(v=vs.110).aspx
+         // http://msdn.microsoft.com/en-us/library/system.windows.controls.richtextbox.caretposition(v=vs.110).aspx
+         // http://msdn.microsoft.com/en-us/library/system.windows.documents.textpointer.getinsertionposition(v=vs.110).aspx
+         // http://msdn.microsoft.com/en-us/library/ms745683(v=vs.110).aspx
+         // http://msdn.microsoft.com/en-us/library/system.windows.style(v=vs.110).aspx
+         // http://msdn.microsoft.com/en-us/library/system.text.regularexpressions.match(v=vs.110).aspx
+         
+        public GfmSyntaxProvider()
+        {
+            theme = new GfmColorTheme();
+        }
+        public void CheckAllBlocks()
         {
             if (Model.Instance.mw.rtb.Document == null)
             {
@@ -36,10 +45,12 @@ namespace GfmSyntax
             }
             CheckAllBlocks(Model.Instance.mw.rtb.Document, Model.Instance.mw.rtb);
         }
-        static public void CheckAllBlocks(FlowDocument fd, RichTextBox rtb)
+        public void CheckAllBlocks(FlowDocument fd, RichTextBox rtb)
         {
             Stopwatch st = Stopwatch.StartNew();
             int pointer = rtb.CaretPosition.GetOffsetToPosition(rtb.CaretPosition.DocumentStart) * -1;
+            LogicalDirection dir = rtb.CaretPosition.LogicalDirection;
+            TextRange cursor = new TextRange(rtb.Document.ContentStart, rtb.CaretPosition);
             // replace rtb? http://msdn.microsoft.com/en-us/library/system.windows.controls.flowdocumentscrollviewer(v=vs.110).aspx
             // http://stackoverflow.com/questions/2068120/c-sharp-cast-entire-array
             Paragraph[] pars = Array.ConvertAll<Block,Paragraph>(fd.Blocks.ToArray<Block>(), item => (Paragraph)item);
@@ -48,102 +59,78 @@ namespace GfmSyntax
             foreach (Paragraph p in pars)
             {
                 string ptext = new TextRange(p.ContentStart, p.ContentEnd).Text;
-                p.Inlines.Clear();
-                //string[] words = ptext.Split(new char[] { ' ' });
-                string[] words = Regex.Split(ptext, @"(?<= )");
-
-                foreach (string w in words)
+                TextRange tr = new TextRange(p.ContentStart, p.ContentEnd);
+                //p.Inlines.Clear();
+                tr.ClearAllProperties();
+                //string[] words = Regex.Split(ptext, @"(?<= )");
+                int matchNumber = 0;
+                foreach (GfmSyntaxRule rule in theme.rules)
                 {
-                    //Run newInline = new Run(w + " ");
-                    Run newInline = new Run(w);
-                    BrushConverter conv = new BrushConverter();
-                    string color = "#" + ("" + rand.Next()).Substring(0, 6);
-                    string color2 = "#" + ("33" + rand.Next()).Substring(0, 8);
-                    SolidColorBrush brush = conv.ConvertFromString(color) as SolidColorBrush;
-                    SolidColorBrush brush2 = conv.ConvertFromString(color2) as SolidColorBrush;
-                    newInline.Foreground = brush;
-                    newInline.Background = brush2;
-                    p.Inlines.Add(newInline);
+                    MatchCollection matches = Regex.Matches(ptext, rule.regex);
+                    TextRange[] markups = new TextRange[matches.Count];
+                    //CaptureCollection captures = matches.Captures;
+                    
+                    for (int i = 0; i < matches.Count; i++)
+                    {
+                        Match match = matches[i];
+                        //int start = match.Index;
+                        //int end = match.Index + match.Length;
+                        
+                        TextPointer start = tr.Start.GetPositionAtOffset(match.Index);
+                        TextPointer end = tr.Start.GetPositionAtOffset(match.Index + match.Length);
+
+                        TextRange matchRange = new TextRange(start, end);
+                        markups[i] = matchRange;
+                        //matchNumber += 4;
+                    }
+
+                    for (int i = 0; i < matches.Count; i++)
+                    {
+
+                        markups[i].ApplyPropertyValue(TextElement.ForegroundProperty, new SolidColorBrush(rule.color));
+                        //pointer += 4;
+                    }
                 }
             }
+            
             st.Stop();
             db.w(" elapsed " + st.Elapsed);
             rtb.Document = fd;
+
             rtb.CaretPosition = rtb.CaretPosition.DocumentStart;
-            rtb.CaretPosition = rtb.CaretPosition.GetPositionAtOffset(pointer, LogicalDirection.Forward);
+            pointer = cursor.End.GetOffsetToPosition(rtb.Document.ContentStart) * -1;
+            rtb.CaretPosition = rtb.CaretPosition.GetPositionAtOffset(pointer, dir);
         }
-        public void CheckBlock(Block block)
+        
+    }
+    internal class GfmColorTheme
+    {
+        
+        internal Color appBg = Color.FromArgb(255, 127, 127, 127);
+        internal Color textBg = Color.FromArgb(127, 255, 255, 255);
+
+        internal List<GfmSyntaxRule> rules = new List<GfmSyntaxRule>();
+
+        internal GfmColorTheme ()
         {
 
-        }
-
-        static List<string> tags = new List<string>
-        {
-            " _",
-            " *",
-            " __",
-            " **",
-            " ~~",
-            "<!--",
-            "-->"
-        };
-        static List<string> flags = new List<string>
-        {
-            "#",
-            " * ",
-            " + ",
-            " - ",
-            "\t"
-        };
-        public static bool StringContainsTags (string s)
-        {
-            bool r = false;
-            foreach (string t in tags)
-            {
-                if (s.Contains(t) == true)
-                    r = true;
-            }
-            return r;
-        }
-        public static bool StringContainsFlags (string s)
-        {
-            bool r = false;
-            // remove tabs down to a max of 1 tab, to cover nested lists
-            while (s.Contains("\t\t"))
-            {
-                s.Replace("\t\t", "\t");
-            }
-            foreach (string f in flags)
-            {
-                if (s.StartsWith(f) == true)
-                    r = true;
-            }
-            return r;
+            rules.Add(new GfmSyntaxRule(@" (\*[\w\s]+\*)", new Style(), Colors.Red));
+            rules.Add(new GfmSyntaxRule(@" (_\w+_)", new Style(), Colors.Blue));
+            rules.Add(new GfmSyntaxRule(@" (\*\*\w+\*\*)", new Style(), Colors.Green));
         }
     }
-    class GsFolder
+    internal class GfmSyntaxRule
     {
-        public object analog;
-        public GsFolder childFolders;
-        public GsSpan childSpans;
-        public string text;
+        internal string regex;
+        internal Style style;
+        internal Color color;
 
-        GsFolder ()
+        internal GfmSyntaxRule() { }
+        internal GfmSyntaxRule (string reg, Style sty, Color col)
         {
-
+            regex = reg;
+            style = sty;
+            color = col;
         }
-        GsFolder (FlowDocument fd)
-        {
-
-        }
-        GsFolder (Section sec)
-        {
-
-        }
-    }
-    class GsSpan
-    {
-        public object analog;
-        public string text;
     }
 }
