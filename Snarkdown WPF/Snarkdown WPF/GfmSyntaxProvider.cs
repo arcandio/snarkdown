@@ -48,6 +48,7 @@ namespace GfmSyntax
         public void CheckAllBlocks(FlowDocument fd, RichTextBox rtb)
         {
             Stopwatch st = Stopwatch.StartNew();
+            TextPointer tp = rtb.CaretPosition;
             int pointer = rtb.CaretPosition.GetOffsetToPosition(rtb.CaretPosition.DocumentStart) * -1;
             LogicalDirection dir = rtb.CaretPosition.LogicalDirection;
             TextRange cursor = new TextRange(rtb.Document.ContentStart, rtb.CaretPosition);
@@ -92,10 +93,12 @@ namespace GfmSyntax
             st.Stop();
             db.w(" elapsed " + st.Elapsed);
             rtb.Document = fd;
-
+            /*
             rtb.CaretPosition = rtb.CaretPosition.DocumentStart;
             pointer = cursor.End.GetOffsetToPosition(rtb.Document.ContentStart) * -1;
             rtb.CaretPosition = rtb.CaretPosition.GetPositionAtOffset(pointer, dir);
+            */
+            rtb.CaretPosition = tp;
         }
         
     }
@@ -109,10 +112,13 @@ namespace GfmSyntax
 
         internal GfmColorTheme ()
         {
-
-            rules.Add(new GfmSyntaxRule(@" (\*[\w\s]+\*)", new Style(), Colors.Red));
+            // emphasis/italic
+            rules.Add(new GfmSyntaxRule(@"[ \n\r](\*[\w ]+\*)", new Style(), Colors.Red));
             rules.Add(new GfmSyntaxRule(@" (_\w+_)", new Style(), Colors.Blue));
+            // strong/bold
             rules.Add(new GfmSyntaxRule(@" (\*\*\w+\*\*)", new Style(), Colors.Green));
+            // 
+
         }
     }
     internal class GfmSyntaxRule
