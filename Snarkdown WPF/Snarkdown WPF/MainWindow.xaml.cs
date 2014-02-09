@@ -43,7 +43,7 @@ namespace Snarkdown_WPF
             columnWidth = collapseCol.Width;
             rowHeight = collapseRow.Height;
         }
-
+        #region UI events
         private void NewDoc_Click(object sender, RoutedEventArgs e)
         {
             Model.Instance.CurrentDocument = new DocModel();
@@ -120,7 +120,7 @@ namespace Snarkdown_WPF
         private void OpenProj_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Markdown Files (.md, .txt)|*.md;*.txt;project.md.meta|Text Files (.txt)|*.txt|All Files (*.*)|*.*";
+            ofd.Filter = "Markdown Files (.md, .txt)|*.md;*.txt;project.mdmeta|Text Files (.txt)|*.txt|All Files (*.*)|*.*";
             ofd.FilterIndex = 1;
             ofd.Multiselect = false;
             ofd.Title = "Open File or Project";
@@ -205,7 +205,7 @@ namespace Snarkdown_WPF
                 fullscreenMenuItem.IsChecked = IsFullscreen;
             }
         }
-
+        #endregion
         private void datagrid_CurrentCellChanged(object sender, EventArgs e)
         {
             // throws an error if you click on the last row...
@@ -224,6 +224,8 @@ namespace Snarkdown_WPF
         {
             //db.w("caught changed args");
             Model.Instance.gfm.CheckAllBlocks();
+            // send content to DocModel
+            Model.Instance.Content = new TextRange(rtb.Document.ContentStart, rtb.Document.ContentEnd).Text;
         }
 
     }

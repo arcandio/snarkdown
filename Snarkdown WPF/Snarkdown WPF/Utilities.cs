@@ -97,7 +97,7 @@ namespace Snarkdown_WPF
                     // store the path root to check against
                     string pr = Path.GetPathRoot(modPath);
 
-                    // check parent directories until we find "project.md.meta" or run out of depth
+                    // check parent directories until we find "project.mdmeta" or run out of depth
                     while (searchDepth > 0)
                     {
                         if (File.Exists(modPath + "project.md"))
@@ -129,7 +129,7 @@ namespace Snarkdown_WPF
                 if (hasProjectFile)
                 {
                     rootDir = modPath;
-                    //projectFile = projectRoot + "project.md.meta";
+                    //projectFile = projectRoot + "project.mdmeta";
                     db.w("HAD PROJECT FILE: " + rootDir);
                 }
                 else
@@ -137,7 +137,7 @@ namespace Snarkdown_WPF
                     if (Path.GetExtension(startPath) != "")
                     {
                         rootDir = Path.GetDirectoryName(startPath);
-                        //projectFile = projectRoot + "project.md.meta";
+                        //projectFile = projectRoot + "project.mdmeta";
 
                     }
                     else

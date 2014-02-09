@@ -8,115 +8,6 @@ using System.Collections.ObjectModel;
 
 namespace Snarkdown_WPF
 {
-    /*
-    public class ProjectModel
-    {
-
-        // replacing File Model
-        public List<DocModel> fileModelItems;
-        public string projectRoot;
-        public string projectFile;
-        public DocModel rootObject;
-
-        public int totalWC;
-        public int totalT;
-        public int dailyWC;
-        public int dailyT;
-
-        public bool isBlank = true;
-
-        //private int maxFiles = 100;
-        /// <summary>
-        /// Empty Constructor
-        /// </summary>
-        public ProjectModel()
-        {
-            // at least set up the lists and add it to the model
-            fileModelItems = new List<DocModel>();
-            Model.projectModels.Add(this);
-            Model.currentProject = this;
-            // blank constructor, so blank instance
-            isBlank = true;
-        }
-        /// <summary>
-        /// creates a project at the directory
-        /// </summary>
-        /// <param name="pathToFile">a path to a file or folder target</param>
-        public ProjectModel(string pathToFile)
-        {
-            // it's blank until we finish initializing it, just in case
-            isBlank = true;
-            // first convert to a folder, then to init
-            Initialize(Path.GetDirectoryName(pathToFile));
-        }
-
-        private void Initialize(string pathToFolder)
-        {
-            // get the root dir for this path, to see if there's a project there
-            string pathToRoot = DirectoryHelper.GetRootDir(pathToFolder);
-            projectRoot = pathToRoot;
-            // initialize a list of files
-            fileModelItems = new List<DocModel>();
-            rootObject = new DocModel(pathToRoot, this);
-            //rootObject.myProject = this;
-            fileModelItems.Add(rootObject);
-            // add this to the model's list
-            Model.projectModels.Add(this);
-            Model.currentProject = this;
-            // we've finished, so make sure this is marked as not blank
-            isBlank = false;
-        }
-        /// <summary>
-        /// sets the project's directory up and resets the item list
-        /// </summary>
-        /// <param name="pathToFolder">a path to a file or folder target</param>
-        private void Reinitialize(string pathToFolder)
-        {
-            // store old file list
-            List<DocModel> old;
-            if (fileModelItems.Count > 0)
-            {
-                old = fileModelItems;
-            }
-            // get the root dir for this path, to see if there's a project there
-            string pathToRoot = DirectoryHelper.GetRootDir(pathToFolder);
-            projectRoot = pathToRoot;
-            // initialize a list of files
-            fileModelItems = new List<DocModel>();
-            rootObject = new DocModel(pathToRoot, this);
-            //rootObject.myProject = this;
-            fileModelItems.Add(rootObject);
-            // add this to the model's list
-            //Model.projectModels.Add(this);
-            Model.currentProject = this;
-        }
-        /// <summary>
-        /// update the info for the project
-        /// </summary>
-        public void Update()
-        {
-            // todo
-        }
-
-        /// <summary>
-        /// retrieve file from the project's list
-        /// </summary>
-        /// <param name="path">path to try to match</param>
-        /// <returns>Reference to the appropriate DocModel</returns>
-        public DocModel GetFile(string path)
-        {
-            DocModel gf = null;
-            for (int i = 0; i < fileModelItems.Count; i++)
-            {
-                if (path == fileModelItems[i].pathFile)
-                {
-                    gf = fileModelItems[i];
-                }
-            }
-            return gf;
-        }
-    }
-    */
     public partial class DocModel
     {
         #region fields
@@ -327,7 +218,7 @@ namespace Snarkdown_WPF
         {
             if (CheckFilePath(false) && metaItemType == TreeItemType.Text)
             {
-                metaPath = pathFile + ".meta";
+                metaPath = pathFile + "meta";
                 metaExists = CheckFilePath(metaPath, true);
                 // connect file to meta
                 if (metaExists)
@@ -371,7 +262,7 @@ namespace Snarkdown_WPF
                     case ".markdown":
                         metaItemType = TreeItemType.Text;
                         break;
-                    case ".meta":
+                    //case ".meta":
                     case ".mdmeta":
                         metaItemType = TreeItemType.Meta;
                         break;
@@ -397,7 +288,7 @@ namespace Snarkdown_WPF
                         metaItemType = TreeItemType.Other;
                         break;
                 }
-                if (fileName == "project.md.meta")
+                if (fileName == "project.md")
                 {
                     metaItemType = TreeItemType.Project;
                 }
@@ -542,11 +433,11 @@ namespace Snarkdown_WPF
                 {
                     sw.Write(textContents);
                 }
-                if (metaPath != null && meta.Length > 0)
+                if (metaPath != null && meta != null && meta.Length > 0)
                 {
                     if (metaPath != null || metaPath.Length < 1)
                     {
-                        metaPath = pathFile+".meta";
+                        metaPath = pathFile+"meta";
                     }
                     using (StreamWriter sw = new StreamWriter(metaPath))
                     {

@@ -105,23 +105,52 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <None Include="SampleProject\Chapter 1\scene.md" />
-    <None Include="SampleProject\Chapter 1\scene.md.meta" />
-    <None Include="SampleProject\Chapter 1\scene2.md" />
-    <None Include="SampleProject\Chapter 1\scene2.md.meta" />
-    <None Include="SampleProject\Chapter 2\scene.md" />
-    <None Include="SampleProject\Chapter 2\scene.md.meta" />
-    <None Include="SampleProject\Chapter 2\scene2.md" />
-    <None Include="SampleProject\Chapter 2\scene2.md.meta" />
-    <None Include="SampleProject\Chapter 3\scene.md" />
-    <None Include="SampleProject\Chapter 3\scene.md.meta" />
-    <None Include="SampleProject\Chapter 3\scene2.md" />
-    <None Include="SampleProject\Chapter 3\scene2.md.meta" />
-    <None Include="SampleProject\project.md.meta" />
+    <None Include="SampleProject\Chapter 1.mdmeta">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="SampleProject\Chapter 1\scene.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="SampleProject\Chapter 1\scene.mdmeta">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="SampleProject\Chapter 1\scene2.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="SampleProject\Chapter 1\scene2.mdmeta">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="SampleProject\Chapter 2\scene.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="SampleProject\Chapter 2\scene.mdmeta">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="SampleProject\Chapter 2\scene2.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="SampleProject\Chapter 2\scene2.mdmeta">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="SampleProject\Chapter 3\scene.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="SampleProject\Chapter 3\scene.mdmeta">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="SampleProject\Chapter 3\scene2.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="SampleProject\Chapter 3\scene2.mdmeta">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="SampleProject\project.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="SampleProject\_titlepage.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="SampleProject\_titlepage.md.meta">
+    <None Include="SampleProject\_titlepage.mdmeta">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -139,6 +168,11 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="artwork\noise.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="SampleProject\test.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

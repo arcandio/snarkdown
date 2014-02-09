@@ -66,7 +66,7 @@ namespace Snarkdown_WPF
                 NotifyPropertyChanged();
             }
         }
-        public DocModel currentDocument;
+        public DocModel currentDocument = new DocModel();
         public DocModel CurrentDocument
         {
             get { return currentDocument; }
@@ -75,9 +75,13 @@ namespace Snarkdown_WPF
                 if (value != null && currentDocument != value)
                 {
                     currentDocument = value;
-                    instance.Content = currentDocument.textContents;
-                    instance.Meta = currentDocument.meta;
+                    instance.Content = CurrentDocument.TextContents;
+                    instance.Meta = CurrentDocument.Meta;
                     NotifyPropertyChanged();
+                    Instance.mw.rtb.Document = new FlowDocument();
+                    Instance.mw.rtb.AppendText(Instance.Content);
+                    Model.Instance.gfm.CheckAllBlocks();
+                    //Instance.mw.rtb.Document = Instance.Content;
                 }
             }
         }

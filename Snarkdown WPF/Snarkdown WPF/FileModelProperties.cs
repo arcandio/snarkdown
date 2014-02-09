@@ -72,7 +72,7 @@ namespace Snarkdown_WPF
 
         public string TextContents
         {
-            get { return textContents + "test"; }
+            get { return textContents; }
             set { textContents = value; NotifyPropertyChanged(); }
         }
         public string TextContentsStyled
