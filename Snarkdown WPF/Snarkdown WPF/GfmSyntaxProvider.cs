@@ -54,41 +54,32 @@ namespace GfmSyntax
             // replace rtb? http://msdn.microsoft.com/en-us/library/system.windows.controls.flowdocumentscrollviewer(v=vs.110).aspx
             // http://stackoverflow.com/questions/2068120/c-sharp-cast-entire-array
             Paragraph[] pars = Array.ConvertAll<Block,Paragraph>(fd.Blocks.ToArray<Block>(), item => (Paragraph)item);
-            //db.w("found blocks x" + fd.Blocks.Count + " pars x" + pars.Length);
-            Random rand = new Random();
+            
             foreach (Paragraph p in pars)
             {
                 string ptext = new TextRange(p.ContentStart, p.ContentEnd).Text;
                 TextRange tr = new TextRange(p.ContentStart, p.ContentEnd);
-                //p.Inlines.Clear();
                 tr.ClearAllProperties();
-                //string[] words = Regex.Split(ptext, @"(?<= )");
-                int matchNumber = 0;
                 foreach (GfmSyntaxRule rule in theme.rules)
                 {
                     MatchCollection matches = Regex.Matches(ptext, rule.regex);
                     TextRange[] markups = new TextRange[matches.Count];
-                    //CaptureCollection captures = matches.Captures;
                     
                     for (int i = 0; i < matches.Count; i++)
                     {
                         Match match = matches[i];
-                        //int start = match.Index;
-                        //int end = match.Index + match.Length;
                         
-                        TextPointer start = tr.Start.GetPositionAtOffset(match.Index);
-                        TextPointer end = tr.Start.GetPositionAtOffset(match.Index + match.Length);
+                        TextPointer start = tr.Start.GetPositionAtOffset(match.Captures[0].Index);
+                        TextPointer end = tr.Start.GetPositionAtOffset(match.Captures[0].Index + match.Captures[0].Length);
 
                         TextRange matchRange = new TextRange(start, end);
                         markups[i] = matchRange;
-                        //matchNumber += 4;
                     }
 
                     for (int i = 0; i < matches.Count; i++)
                     {
 
-                        markups[i].ApplyPropertyValue(TextElement.ForegroundProperty, new SolidColorBrush(rule.color));
-                        //pointer += 4;
+                        markups[i].ApplyPropertyValue(TextElement.BackgroundProperty, new SolidColorBrush(rule.color));
                     }
                 }
             }
