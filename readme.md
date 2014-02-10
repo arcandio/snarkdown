@@ -1,4 +1,3 @@
-<img src="amateurstamp.png" style="float:right;">
 # Snarkdown: a text editor for novelists
 Simple, to the point, and brutally effective at getting words on the page.
 
@@ -17,3 +16,6 @@ Simple, to the point, and brutally effective at getting words on the page.
 
  * [ColorCode](http://colorcode.codeplex.com/license) ([Ms-Pl](http://opensource.org/licenses/MS-PL))
  * [MarkdownSharp](https://code.google.com/p/markdownsharp/) ([MIT License](http://opensource.org/licenses/mit-license.php))
+ 
+ 
+ <img src="amateurstamp.png" style="float:right;">

@@ -12,6 +12,7 @@ using System.Windows.Documents;
 using System.Windows.Markup;
 using System.Xml;
 using GfmSyntax;
+using System.Windows.Controls;
 
 namespace Snarkdown_WPF
 {
@@ -35,6 +36,7 @@ namespace Snarkdown_WPF
     {
         #region Fields
         public MainWindow mw;
+        public RichTextBox rtb;
         /// <summary>
         /// Singleton instance
         /// </summary>
@@ -78,10 +80,10 @@ namespace Snarkdown_WPF
                     instance.Content = CurrentDocument.TextContents;
                     instance.Meta = CurrentDocument.Meta;
                     NotifyPropertyChanged();
-                    Instance.mw.rtb.Document = new FlowDocument();
-                    Instance.mw.rtb.AppendText(Instance.Content);
+                    Instance.rtb.Document = new FlowDocument();
+                    Instance.rtb.AppendText(Instance.Content);
                     Model.Instance.gfm.CheckAllBlocks();
-                    //Instance.mw.rtb.Document = Instance.Content;
+                    //Instance.rtb.Document = Instance.Content;
                 }
             }
         }
@@ -204,7 +206,6 @@ namespace Snarkdown_WPF
                 Model.Instance.ClearProject();
                 // if so, find a project path for it
                 projectPath = DirectoryHelper.GetRootDir(path);
-                //db.w(projectPath);
                 rootObject = new DocModel(projectPath, true);
                 currentDocument = rootObject;
                 db.w("loaded: " + projectPath);
@@ -213,17 +214,14 @@ namespace Snarkdown_WPF
                 {
                     currentDocument = GetDocByFilename(path);
                 }
+                // get contents
                 Content = currentDocument.textContents;
                 Meta = currentDocument.meta;
-                /*
-                Model.Instance.ConvertContentStringToXaml(" ");
-                StringReader sr = new StringReader(Model.Instance.xamlString);
-                XmlReader xr = XmlReader.Create(sr);
-                mw.rtb.Document = (FlowDocument)XamlReader.Load(xr);
-                */
-                mw.rtb.Document.Blocks.Clear();
-                mw.rtb.AppendText(Content);
-                //gfm.CheckAllBlocks();
+                // put contents to text box
+                rtb.Document.Blocks.Clear();
+                rtb.AppendText(Content);
+                // highlight text
+                gfm.CheckAllBlocks();
                 NotifyPropertyChanged();
             }
         }

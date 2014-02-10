@@ -198,7 +198,7 @@ namespace Snarkdown_WPF
                         {
                             Model.Instance.docModels = new ObservableCollection<DocModel>();
                         }
-                        Model.Instance.docModels.Add(fm);
+                        //Model.Instance.docModels.Add(fm);
                         //db.w("doc models: " + Model.Instance.docModels.Count);
                     }
                 }

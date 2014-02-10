@@ -40,11 +40,11 @@ namespace GfmSyntax
         }
         public void CheckAllBlocks()
         {
-            if (Model.Instance.mw.rtb.Document == null)
+            if (Model.Instance.rtb.Document == null)
             {
-                Model.Instance.mw.rtb.Document = new FlowDocument();
+                Model.Instance.rtb.Document = new FlowDocument();
             }
-            CheckAllBlocks(Model.Instance.mw.rtb.Document, Model.Instance.mw.rtb);
+            CheckAllBlocks(Model.Instance.rtb.Document, Model.Instance.rtb);
         }
         public void CheckAllBlocks(FlowDocument fd, RichTextBox rtb)
         {

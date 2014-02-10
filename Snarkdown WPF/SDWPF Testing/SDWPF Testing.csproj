@@ -63,6 +63,7 @@
     <Compile Include="DocModel Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="gfm tests.cs" />
+    <Compile Include="ModelTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Snarkdown WPF\Snarkdown WPF.csproj">
@@ -77,6 +78,35 @@
     <None Include="test.mdmeta">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestProject\Chapter 1.mdmeta">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestProject\Chapter 1\scene.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestProject\Chapter 1\scene.mdmeta">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestProject\Chapter 1\scene2.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestProject\Chapter 1\scene2.mdmeta">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestProject\project.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestProject\_titlepage.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestProject\_titlepage.mdmeta">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TestProject\test.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

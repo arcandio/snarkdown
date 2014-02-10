@@ -39,9 +39,18 @@ namespace Snarkdown_WPF
             Model.Instance.mw = this;
             Model.Instance.gfm = new GfmSyntaxProvider();
             InitializeComponent();
+            Model.Instance.rtb = this.rtb;
             //Model.Instance.LoadProject(@"SampleProject"); // debuggery
             columnWidth = collapseCol.Width;
             rowHeight = collapseRow.Height;
+        }
+        public MainWindow(bool debug)
+        {
+            Model.Instance.mw = this;
+            Model.Instance.gfm = new GfmSyntaxProvider();
+            //InitializeComponent();
+            //columnWidth = collapseCol.Width;
+            //rowHeight = collapseRow.Height;
         }
         #region UI events
         private void NewDoc_Click(object sender, RoutedEventArgs e)
