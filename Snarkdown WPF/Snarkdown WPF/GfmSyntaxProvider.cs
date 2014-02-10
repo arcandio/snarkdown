@@ -97,6 +97,7 @@ namespace GfmSyntax
                         for (int i = 0; i < rule.matches.Count; i++)
                         {
                             rule.markups[i].ApplyPropertyValue(TextElement.BackgroundProperty, new SolidColorBrush(rule.color));
+                            //rule.markups[i].ApplyPropertyValue(TextElement., "markup");
                         }
                     }
                 }
@@ -125,7 +126,7 @@ namespace GfmSyntax
         internal GfmColorTheme ()
         {
             // emphasis/italic
-            rules.Add(new GfmSyntaxRule(@"((?<=\s*)(\*[\w ]+?\*))|((?<=\s)(_[\w ]+?_))", Colors.Cyan, false));
+            rules.Add(new GfmSyntaxRule(@"((?<=\s)(\*[\w ]+?\*))|((?<=\s)(_[\w ]+?_))", Colors.Cyan, false));
             //rules.Add(new GfmSyntaxRule(@"(?<=\s)(_[\w ]+_)",  Colors.Cyan));
             // strong/bold
             rules.Add(new GfmSyntaxRule(@"((?<=\s)(\*\*[\w ]+?\*\*))|((?<=\s)(__[\w ]+?__))",  Colors.Blue, false));
