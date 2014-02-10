@@ -1,5 +1,5 @@
+<img src="amateurstamp.png" style="float:right;">
 # Snarkdown: a text editor for novelists
-
 Simple, to the point, and brutally effective at getting words on the page.
 
 ## features

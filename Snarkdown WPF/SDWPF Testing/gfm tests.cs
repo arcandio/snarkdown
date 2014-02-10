@@ -106,7 +106,7 @@ namespace SDWPF_Testing
 
             // assert
             Assert.AreEqual(text2, text, "Didn't transport text correctly");
-            Assert.IsTrue(serializedOutput.Contains(check));
+            Assert.IsTrue(serializedOutput.Contains(check),"Did not contain check: "+check);
         }
 
         // end of test methods
