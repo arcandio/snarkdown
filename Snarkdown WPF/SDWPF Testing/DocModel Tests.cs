@@ -83,6 +83,17 @@ namespace SDWPF_Testing
             // assert
             Assert.AreEqual(docmodel.Meta, meta, "Contents did not match");
         }
+        [TestMethod]
+        public void DocModel_GetMetaName()
+        {
+            // arrange
+            string file = "test.md";
+            string metaName = "test.mdmeta";
+            // act
+            DocModel docmodel = new DocModel(file, false);
+            // assert
+            Assert.AreEqual(docmodel.metaPath, metaName, "Wrong Meta file name generated");
+        }
 
         // end of test cases
     }
