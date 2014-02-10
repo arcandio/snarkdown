@@ -78,13 +78,20 @@ namespace Snarkdown_WPF
                 {
                     currentDocument = value;
                     instance.Content = CurrentDocument.TextContents;
-                    instance.Meta = CurrentDocument.Meta;
+                    //instance.Meta = CurrentDocument.Meta;
                     NotifyPropertyChanged();
                     Instance.rtb.Document = new FlowDocument();
                     Instance.rtb.AppendText(Instance.Content);
                     Model.Instance.gfm.CheckAllBlocks();
                     //Instance.rtb.Document = Instance.Content;
                 }
+                /*
+                if (instance.Meta != null && instance.Meta.Length == 0 && CurrentDocument.Meta != instance.Meta)
+                {
+                    instance.Meta = CurrentDocument.Meta;
+                    NotifyPropertyChanged();
+                }*/
+                db.w("Set CurrentDocument");
             }
         }
 
@@ -148,7 +155,7 @@ namespace Snarkdown_WPF
             get
             {
                 string t = "";
-                if (Instance.currentDocument != null && Instance.currentDocument.textContents != null)
+                if (Instance.currentDocument != null && Instance.currentDocument.meta != null)
                 {
                     t = Instance.currentDocument.meta;
                 }
@@ -161,6 +168,7 @@ namespace Snarkdown_WPF
                     Instance.currentDocument.meta = value;
                 }
                 NotifyPropertyChanged();
+                //db.w(" meta changed ");
             }
         }
         public string exportPath = "";

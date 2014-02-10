@@ -63,7 +63,6 @@
             <Button Content="Edit Word Counts"/>
             <MenuItem Header="Wordcount"/>
         </StatusBar>
-        <TextBox x:Name="docview" TextWrapping="Wrap" Text="{Binding Instance.Content}" SpellCheck.IsEnabled="True" Margin="173,26,10,0" AcceptsReturn="True" Height="25" VerticalAlignment="Top"/>
         <TextBox x:Name="metaview" TextWrapping="Wrap" Text="{Binding Instance.Meta}" Margin="10,49,10,10" Grid.Column="1"/>
         <GridSplitter Margin="0,21,0,0" Width="4"/>
         <GridSplitter HorizontalAlignment="Stretch" Height="4" VerticalAlignment="Top" ResizeDirection="Rows" Grid.Row="1" Grid.ColumnSpan="2"/>
