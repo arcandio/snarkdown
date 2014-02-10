@@ -63,6 +63,18 @@
     <ApplicationIcon>snarkdown Icon 3 copy.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ColorCode, Version=1.0.1.62759, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\ColorCode.dll</HintPath>
+    </Reference>
+    <Reference Include="Kiwi.Markdown, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\Kiwi.Markdown.dll</HintPath>
+    </Reference>
+    <Reference Include="MarkdownSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\MarkdownSharp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -189,15 +201,18 @@
     <Resource Include="snarkdown Icon 3 copy.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Kiwi.Markdown\Kiwi.Markdown.csproj">
-      <Project>{36c2c8f1-9b44-48c9-a281-e68e78ae2c91}</Project>
-      <Name>Kiwi.Markdown</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="artwork\noise.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ColorCode.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Kiwi.Markdown.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MarkdownSharp.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="SampleProject\test.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
