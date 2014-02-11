@@ -79,13 +79,13 @@ namespace SDWPF_Testing
         {
             CheckSyntaxHighlighting(" <!-- comment -->", "Background");
         }
-
+        /*
         [TestMethod]
         public void GfmSyntax_MultilineHeader()
         {
             CheckSyntaxHighlighting("A Heading\n\r======", "Background");
         }
-
+        */
         public void CheckSyntaxHighlighting (string example, string check)
         {
             // arrange

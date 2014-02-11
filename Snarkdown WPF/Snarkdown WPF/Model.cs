@@ -13,6 +13,9 @@ using System.Windows.Markup;
 using System.Xml;
 using GfmSyntax;
 using System.Windows.Controls;
+using Kiwi.Markdown;
+using Kiwi.Markdown.ContentProviders;
+using System.IO.Compression;
 
 namespace Snarkdown_WPF
 {
@@ -37,6 +40,14 @@ namespace Snarkdown_WPF
         #region Fields
         public MainWindow mw;
         public RichTextBox rtb;
+        private bool isProjectBlank;
+        public bool IsProjectBlank
+        {
+            get { return isProjectBlank; }
+            set { isProjectBlank = value; NotifyPropertyChanged(); }
+        }
+        //public bool isProjectSaved;
+
         /// <summary>
         /// Singleton instance
         /// </summary>
@@ -44,7 +55,7 @@ namespace Snarkdown_WPF
         // ctor
         private Model()
         {
-            
+            IsProjectBlank = true;
         }
         // singleton pattern
         public static Model Instance
@@ -197,12 +208,21 @@ namespace Snarkdown_WPF
             Meta = "";
             RootObject = new DocModel();
             ProjectPath = "";
+            IsProjectBlank = true;
         }
         public void SaveProjectData()
         {
-            using (StreamWriter sw = new StreamWriter(rootObject.pathFile + "\\project.md"))
+            // check to see if we have a valid project
+            if (rootObject != null && rootObject.pathFile != null && rootObject.pathFile.Length > 0)
             {
-                sw.Write(rootObject.textContents);
+                using (StreamWriter sw = new StreamWriter(rootObject.pathFile + "\\project.md"))
+                {
+                    sw.Write(rootObject.textContents);
+                }
+            }
+            else
+            {
+                db.w("no valid project path to save.");
             }
         }
         public void LoadProject(string path)
@@ -230,8 +250,78 @@ namespace Snarkdown_WPF
                 rtb.AppendText(Content);
                 // highlight text
                 gfm.CheckAllBlocks();
+                IsProjectBlank = false;
                 NotifyPropertyChanged();
             }
+        }
+        public void NewProject (string path)
+        {
+            //string returnedPath = "";
+            string projectTitle = "";
+            string projectPath = "";
+            string rootPath = "";
+            //returnedPath = sfd.FileName;
+            //projectPath = System.IO.Path.GetFullPath(returnedPath);
+            projectPath = System.IO.Path.GetDirectoryName(path);
+            projectTitle = System.IO.Path.GetFileNameWithoutExtension(path);
+            // create the file
+            rootPath = projectPath + "\\project.md";
+            try
+            {
+                using (StreamWriter sw = new StreamWriter(rootPath))
+                {
+                    sw.Write(" * Project Name: " + projectTitle);
+                }
+            }
+            catch (Exception ex)
+            {
+                db.w("exception: " + ex);
+            }
+            // load the blank project in
+            if (File.Exists(rootPath))
+            {
+                // clear all the documents and fields on Model.
+                Model.Instance.LoadProject(rootPath);
+            }
+        }
+        public void ExportProject ()
+        {
+            if (Model.Instance.exportPath.Length > 0)
+            {
+                // https://github.com/danielwertheim/kiwi/wiki/Use-with-Asp.Net-MVC
+                // http://stackoverflow.com/questions/8210974/markdownsharp-github-syntax-for-c-sharp-code
+                // compile all markdown files together
+                string compiledMD = "";
+                foreach (DocModel dm in Model.Instance.docModels)
+                {
+                    // check that we should include this document
+                    compiledMD += dm.textContents;
+                    compiledMD += Environment.NewLine;
+                }
+                // set up our service and render to html
+                MarkdownService mds = new MarkdownService(new FileContentProvider(Model.Instance.ProjectPath));
+                //MarkdownService mds = new MarkdownService();
+                //db.w(mds.ToHtml(compiledMD));
+                // save html content to file
+
+                using (StreamWriter sw = new StreamWriter(Model.Instance.exportPath))
+                {
+                    sw.Write(mds.ToHtml(compiledMD));
+                }
+            }
+        }
+        public string BackupProject ()
+        {
+            string projectPathParent = Directory.GetParent(Model.Instance.projectPath).ToString();
+            string backupTitle = Path.GetFileName(Model.Instance.projectPath); // TODO: should be project name
+            backupTitle += DateTime.Now.ToString("-yyyy-MMdd-HHmm");
+            string backupPath = projectPathParent + @"\" + backupTitle + ".zip";
+            if (File.Exists(backupPath))
+            {
+                backupPath = backupPath.Replace(".zip", "-" + DateTime.Now.Second + ".zip");
+            }
+            ZipFile.CreateFromDirectory(Model.Instance.projectPath, backupPath, CompressionLevel.Fastest, true);
+            return backupPath;
         }
         public DocModel GetDocByFilename(string path)
         {

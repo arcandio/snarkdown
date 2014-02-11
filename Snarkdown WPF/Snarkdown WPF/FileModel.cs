@@ -425,7 +425,7 @@ namespace Snarkdown_WPF
         /// </summary>
         public void Save()
         {
-            // save the projec data.
+            // save the project data.
             Model.Instance.SaveProjectData();
             if (CheckFilePath(false))
             {

@@ -9,10 +9,6 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using Microsoft.Win32;
-using System.IO;
-using System.IO.Compression;
-using Kiwi.Markdown;
-using Kiwi.Markdown.ContentProviders;
 using GfmSyntax;
 /*
 using System.Windows.Media;
@@ -93,35 +89,9 @@ namespace Snarkdown_WPF
             sfd.FileName = "New Project Title";
             //sfd.ShowNewFolderButton = true;
             Nullable<bool> result = sfd.ShowDialog();
-            string returnedPath = "";
-            string projectTitle = "";
-            string projectPath = "";
-            string rootPath = "";
             if (result == true)
             {
-                returnedPath = sfd.FileName;
-                //projectPath = System.IO.Path.GetFullPath(returnedPath);
-                projectPath = System.IO.Path.GetDirectoryName(returnedPath);
-                projectTitle = System.IO.Path.GetFileNameWithoutExtension(returnedPath);
-                // create the file
-                rootPath = projectPath + "\\project.md";
-                try
-                {
-                    using (StreamWriter sw = new StreamWriter(rootPath))
-                    {
-                        sw.Write(" * Project Name: " + projectTitle);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    db.w("exception: " + ex);
-                }
-                // load the blank project in
-                if (File.Exists(rootPath))
-                {
-                    // clear all the documents and fields on Model.
-                    Model.Instance.LoadProject(rootPath);
-                }
+                Model.Instance.NewProject(sfd.FileName);
             }
 
         }
@@ -138,26 +108,12 @@ namespace Snarkdown_WPF
             if (result == true)
             {
                 returnedPath = ofd.FileName;
-            }
-            if (File.Exists(returnedPath))
-            {
-                // clear all the documents and fields on Model.
                 Model.Instance.LoadProject(returnedPath);
             }
         }
 
         private void ExportProj_Click(object sender, RoutedEventArgs e)
         {
-            // https://github.com/danielwertheim/kiwi/wiki/Use-with-Asp.Net-MVC
-            // http://stackoverflow.com/questions/8210974/markdownsharp-github-syntax-for-c-sharp-code
-            // compile all markdown files together
-            string compiledMD = "";
-            foreach (DocModel dm in Model.Instance.docModels)
-            {
-                // check that we should include this document
-                compiledMD += dm.textContents;
-                compiledMD += "\n";
-            }
             // ask for a place to save
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = "HTML file (.html|*.html";
@@ -167,33 +123,13 @@ namespace Snarkdown_WPF
             if ( result == true )
             {
                 Model.Instance.exportPath = sfd.FileName;
-            }
-            if (Model.Instance.exportPath.Length > 0)
-            {
-                // set up our service and render to html
-                MarkdownService mds = new MarkdownService(new FileContentProvider(Model.Instance.ProjectPath));
-                //MarkdownService mds = new MarkdownService();
-                //db.w(mds.ToHtml(compiledMD));
-                // save html content to file
-                
-                using (StreamWriter sw = new StreamWriter(Model.Instance.exportPath))
-                {
-                    sw.Write(mds.ToHtml(compiledMD));
-                }
+                Model.Instance.ExportProject();
             }
         }
 
         private void BackupProj_Click(object sender, RoutedEventArgs e)
         {
-            string projectPathParent = Directory.GetParent(Model.Instance.projectPath).ToString();
-            string backupTitle = Path.GetFileName(Model.Instance.projectPath); // TODO: should be project name
-            backupTitle += DateTime.Now.ToString("-yyyy-MMdd-HHmm");
-            string backupPath = projectPathParent + @"\" + backupTitle + ".zip";
-            if (File.Exists(backupPath))
-            {
-                backupPath = backupPath.Replace(".zip", "-" + DateTime.Now.Second + ".zip");
-            }
-            ZipFile.CreateFromDirectory(Model.Instance.projectPath, backupPath, CompressionLevel.Fastest, true);
+            Model.Instance.BackupProject();
         }
 
         private void Fullscreen_Click(object sender, ExecutedRoutedEventArgs e)
