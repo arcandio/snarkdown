@@ -36,6 +36,7 @@ namespace Snarkdown_WPF
             Model.Instance.gfm = new GfmSyntaxProvider();
             InitializeComponent();
             Model.Instance.rtb = this.rtb;
+            Model.Instance.rtbmeta = this.rtbmeta;
             //Model.Instance.LoadProject(@"SampleProject"); // debuggery
             columnWidth = collapseCol.Width;
             rowHeight = collapseRow.Height;
@@ -75,6 +76,7 @@ namespace Snarkdown_WPF
                 && Model.Instance.CurrentDocument.pathFile != ""
                 && Model.Instance.CurrentDocument.pathFile.Length > 0)
             {
+                Model.Instance.SaveProjectData();
                 Model.Instance.CurrentDocument.Save();
             }
 
@@ -160,6 +162,7 @@ namespace Snarkdown_WPF
                 if (i != null)
                 {
                     Model.Instance.CurrentDocument = i;
+                    Model.Instance.Meta = Model.Instance.CurrentDocument.Meta;
                     Model.Instance.CountAllWords();
                 }
                 //db.w(""+i);
@@ -168,10 +171,7 @@ namespace Snarkdown_WPF
 
         private void Rtb_KeyUp(object sender, RoutedEventArgs e)
         {
-            Model.Instance.gfm.CheckAllBlocks(); // place in timer block
-            // send content to DocModel
-            Model.Instance.Content = new TextRange(rtb.Document.ContentStart, rtb.Document.ContentEnd).Text;
-            Model.Instance.CountAllWords();
+            Model.Instance.Refresh();
         }
 
     }

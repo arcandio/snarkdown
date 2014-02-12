@@ -40,6 +40,7 @@ namespace Snarkdown_WPF
         #region Fields
         public MainWindow mw;
         public RichTextBox rtb;
+        public RichTextBox rtbmeta;
         private bool isProjectBlank;
         public int wcDay = 0;
         public int wcDoc = 0;
@@ -93,19 +94,23 @@ namespace Snarkdown_WPF
                 {
                     currentDocument = value;
                     instance.Content = CurrentDocument.TextContents;
+                    instance.Meta = CurrentDocument.Meta;
                     //instance.Meta = CurrentDocument.Meta;
-                    NotifyPropertyChanged();
                     Instance.rtb.Document = new FlowDocument();
                     Instance.rtb.AppendText(Instance.Content);
-                    Model.Instance.gfm.CheckAllBlocks();
+                    Instance.rtbmeta.Document = new FlowDocument();
+                    Instance.rtbmeta.AppendText(Instance.Meta);
+                    Model.Instance.gfm.CheckAllBlocks(Instance.rtb);
+                    Model.Instance.gfm.CheckAllBlocks(Instance.rtbmeta);
                     //Instance.rtb.Document = Instance.Content;
+                    NotifyPropertyChanged();
                 }
-                /*
+                
                 if (instance.Meta != null && instance.Meta.Length == 0 && CurrentDocument.Meta != instance.Meta)
                 {
                     instance.Meta = CurrentDocument.Meta;
                     NotifyPropertyChanged();
-                }*/
+                }
                 //db.w("Set CurrentDocument");
             }
         }
@@ -252,9 +257,13 @@ namespace Snarkdown_WPF
                 // put contents to text box
                 rtb.Document.Blocks.Clear();
                 rtb.AppendText(Content);
-                
+
+                rtbmeta.Document.Blocks.Clear();
+                rtbmeta.AppendText(Meta);
+
                 // highlight text
-                gfm.CheckAllBlocks();
+                gfm.CheckAllBlocks(Model.Instance.rtb);
+                gfm.CheckAllBlocks(Model.Instance.rtbmeta);
                 CountAllWords();
                 IsProjectBlank = false;
                 NotifyPropertyChanged();
@@ -332,21 +341,22 @@ namespace Snarkdown_WPF
         
         public DocModel GetDocByFilename(string path)
         {
-            DocModel dm = new DocModel();
+            //DocModel dm = new DocModel();
             foreach (DocModel di in instance.docModels)
             {
                 if (di.pathFile == path)
                 {
-                    dm = di;
+                    //dm = di;
+                    NotifyPropertyChanged();
+                    return di;
                 }
             }
-            NotifyPropertyChanged();
-            return dm;
+            return null;
         }
         public void CountAllWords ()
         {
             instance.wcProj = 0;
-            rootObject.GetWordCount();
+            instance.wcProj = rootObject.GetWordCount();
             /*foreach (DocModel d in docModels)
             {
                 if (d.Type == TreeItemType.Text)
@@ -364,6 +374,15 @@ namespace Snarkdown_WPF
                 //string Model.Instance.WcProj;
                 //NotifyPropertyChanged();
             }
+        }
+        public void Refresh()
+        {
+            Model.Instance.gfm.CheckAllBlocks(Model.Instance.rtb); // place in timer block
+            Model.Instance.gfm.CheckAllBlocks(Model.Instance.rtbmeta); // place in timer block
+            // send content to DocModel
+            Model.Instance.Content = new TextRange(rtb.Document.ContentStart, rtb.Document.ContentEnd).Text;
+            Model.Instance.Meta = new TextRange(rtbmeta.Document.ContentStart, rtbmeta.Document.ContentEnd).Text;
+            Model.Instance.CountAllWords();
         }
 
         #endregion

@@ -52,7 +52,7 @@ namespace SDWPF_Testing
             Assert.AreEqual(fileCheck, false, "Falsely returned file");
         }
         [TestMethod]
-        public void DocModel_CheckContents()
+        public void DocModel_LoadContents()
         {
             // arrange
             string file = "test.md";
@@ -66,6 +66,30 @@ namespace SDWPF_Testing
             PrivateObject obj = new PrivateObject(docmodel);
             // assert
             Assert.AreEqual(docmodel.TextContents, contents, "Contents did not match");
+        }
+        [TestMethod]
+        public void DocModel_SaveContents()
+        {
+            // arrange
+            string file = "testSave.md";
+            string contentsInput = "*test* __contents__";
+            string contentsOutput = "";
+            DocModel docmodel;
+            // act
+            if (File.Exists(file))
+                File.Delete(file);
+            docmodel = new DocModel(file, false);
+            docmodel.textContents = contentsInput;
+            docmodel.Save();
+            using (StreamReader sr = new StreamReader(file))
+            {
+                contentsOutput = sr.ReadToEnd();
+            }
+            // assert
+            Assert.AreEqual(contentsInput, contentsOutput, "Did not write file correctly");
+            // cleanup
+            if (File.Exists(file))
+                File.Delete(file);
         }
         [TestMethod]
         public void DocModel_CheckMeta()
@@ -94,6 +118,7 @@ namespace SDWPF_Testing
             // assert
             Assert.AreEqual(docmodel.metaPath, metaName, "Wrong Meta file name generated");
         }
+
 
         // end of test cases
     }

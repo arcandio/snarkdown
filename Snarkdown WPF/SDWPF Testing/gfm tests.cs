@@ -30,7 +30,7 @@ namespace SDWPF_Testing
             }
             GfmSyntaxProvider gfm = new GfmSyntaxProvider();
             // act
-            gfm.CheckAllBlocks(rtb.Document, rtb);
+            gfm.CheckAllBlocks(rtb);
             // assert
 
         }
@@ -99,7 +99,7 @@ namespace SDWPF_Testing
             // act
             rtb.AppendText(content);
             rtb2.AppendText(content);
-            gfm.CheckAllBlocks(rtb.Document, rtb);
+            gfm.CheckAllBlocks(rtb);
             text = new TextRange(rtb.Document.ContentStart, rtb.Document.ContentEnd).Text;
             text2 = new TextRange(rtb2.Document.ContentStart, rtb2.Document.ContentEnd).Text;
             string serializedOutput = XamlWriter.Save(rtb.Document);

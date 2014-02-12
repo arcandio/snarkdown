@@ -38,6 +38,7 @@ namespace GfmSyntax
         {
             theme = new GfmColorTheme();
         }
+        /*
         public void CheckAllBlocks()
         {
             if (Model.Instance.rtb.Document == null)
@@ -45,9 +46,10 @@ namespace GfmSyntax
                 Model.Instance.rtb.Document = new FlowDocument();
             }
             CheckAllBlocks(Model.Instance.rtb.Document, Model.Instance.rtb);
-        }
-        public void CheckAllBlocks(FlowDocument fd, RichTextBox rtb)
+        }*/
+        public void CheckAllBlocks(RichTextBox rtb)
         {
+            FlowDocument fd = rtb.Document;
             Stopwatch st = Stopwatch.StartNew();
             TextPointer tp = rtb.CaretPosition;
             int pointer = rtb.CaretPosition.GetOffsetToPosition(rtb.CaretPosition.DocumentStart) * -1;

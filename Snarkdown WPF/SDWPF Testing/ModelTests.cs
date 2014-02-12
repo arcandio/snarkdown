@@ -19,7 +19,6 @@ namespace SDWPF_Testing
     [TestClass]
     public class ModelTests
     {
-        string testProjectPath = "TestProject\\project.md";
         [TestMethod]
         public void Model_LoadProject()
         {
@@ -103,20 +102,95 @@ namespace SDWPF_Testing
             Assert.AreEqual(wordCount, Model.Instance.wcProj, wordCount * margin, "Project returned wrong word count");
             Assert.AreEqual(wordCount, Model.Instance.wcProj, "Project returned wrong word count");
         }
+        [TestMethod]
+        public void Model_LoadContent ()
+        {
+            // arrange
+            Random rand = new Random();
+            string tempFileContents = "Test File: "+rand.Next();
+            string tempFileLocation = "TestProject\\temp.md";
+            string returnedContents = "";
+            string rtbContents = "";
+            DocModel ourTestDoc;
+            // act
+            using (StreamWriter sw = new StreamWriter(tempFileLocation))
+            {
+                sw.Write(tempFileContents);
+            }
+            SetupTestUi();
+            ourTestDoc = Model.Instance.GetDocByFilename(tempFileLocation);
+            Model.Instance.CurrentDocument = ourTestDoc;
+            returnedContents = ourTestDoc.textContents;
+            rtbContents = new TextRange(Model.Instance.rtb.Document.ContentStart, 
+                Model.Instance.rtb.Document.ContentEnd).Text.Trim();
+            // assert
+            Assert.IsNotNull(ourTestDoc, "Our Test Doc was null");
+            Assert.AreEqual(tempFileContents, returnedContents, "Contents were not the same as loaded content");
+            Assert.AreEqual(tempFileContents, Model.Instance.Content, "Contents were not the same as Model's content");
+            Assert.AreEqual(tempFileContents, rtbContents, "Contents were not the same as rich text box");
+            File.Delete(tempFileLocation);
+        }
+        [TestMethod]
+        public void Model_SaveContent()
+        {
+            // arrange
+            Random rand = new Random();
+            string tempFileContents = "Test File: " + rand.Next();
+            string tempFileChanges = "Test File Changes: " + rand.Next();
+            string tempFileLocation = "TestProject\\temp.md";
+            string returnedContents = "";
+            string returnedChanges = "";
+            string rtbContents = "";
+            string rtbChanges = "";
+            DocModel ourTestDoc;
+            //PrivateObject mw;
+            // act
+            using (StreamWriter sw = new StreamWriter(tempFileLocation))
+            {
+                sw.Write(tempFileContents);
+            }
+            SetupTestUi();
+            //mw = new PrivateObject(Model.Instance.mw);
+            ourTestDoc = Model.Instance.GetDocByFilename(tempFileLocation);
+            returnedContents = ourTestDoc.textContents;
+            Model.Instance.CurrentDocument = ourTestDoc;
+            returnedContents = ourTestDoc.textContents;
+            rtbContents = new TextRange(Model.Instance.rtb.Document.ContentStart,
+                Model.Instance.rtb.Document.ContentEnd).Text.Trim();
+            //mw.Invoke("Rtb_KeyUp",new object[2]);
+            Model.Instance.Refresh();
+            ourTestDoc.textContents = tempFileChanges;
+            ourTestDoc.Save();
+            using (StreamReader sr = new StreamReader(tempFileLocation))
+            {
+                returnedChanges = sr.ReadToEnd();
+            }
 
+            // assert
+            Assert.IsNotNull(ourTestDoc, "Our Test Doc was null");
+            Assert.AreEqual(tempFileContents, returnedContents, "Contents were not the same as loaded content");
+            Assert.AreEqual(tempFileChanges, Model.Instance.Content, "Contents were not the same as Model's content");
+            Assert.AreEqual(tempFileContents, rtbContents, "Contents were not the same as rich text box");
+            Assert.AreEqual(tempFileChanges, returnedChanges, "Saved contents were not the same");
+            File.Delete(tempFileLocation);
+        }
+
+        string testProjectPath = "TestProject\\project.md";
         public void SetupTestUi ()
         {
             // arrange
             string projectPath = testProjectPath;
             MainWindow mw = new MainWindow(true);
             RichTextBox rtb = new RichTextBox();
+            RichTextBox rtbmeta = new RichTextBox();
             Grid grid1 = new Grid();
 
             // act
-            rtb.Name = "rtb";
+            //rtb.Name = "rtb";
             mw.Content = grid1;
-            grid1.Children.Add(rtb);
+            //grid1.Children.Add(rtb);
             Model.Instance.rtb = rtb;
+            Model.Instance.rtbmeta = rtbmeta;
             Model.Instance.mw = mw;
             Model.Instance.LoadProject(projectPath);
 

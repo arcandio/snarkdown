@@ -158,9 +158,9 @@ namespace Snarkdown_WPF
             }
         }
 
-        public void GetWordCount()
+        public int GetWordCount()
         {
-            if (textContents != null && textContents.Length > 0)
+            if (Type == TreeItemType.Text && textContents != null && textContents.Length > 0)
             {
                 wordCount = WordCounter.CountWordsInString(textContents);
                 wordCountTarget = 500; // TODO: get real target from Meta
@@ -181,6 +181,7 @@ namespace Snarkdown_WPF
                 wordCount = 0;
                 wordCountTarget = 0;
             }
+            return wordCount;
         }
 
         public void Update()
@@ -435,7 +436,7 @@ namespace Snarkdown_WPF
         public void Save()
         {
             // save the project data.
-            Model.Instance.SaveProjectData();
+            //Model.Instance.SaveProjectData();
             if (CheckFilePath(false))
             {
                 using (StreamWriter sw = new StreamWriter(pathFile))
@@ -451,6 +452,7 @@ namespace Snarkdown_WPF
                     using (StreamWriter sw = new StreamWriter(metaPath))
                     {
                         sw.Write(meta);
+                        //db.w("wrote to meta");
                     }
                 }
             }

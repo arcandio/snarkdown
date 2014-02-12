@@ -72,7 +72,6 @@
             <Label x:Name="labelWcDay" Content="Daily Words" Foreground="#FFB4B4B4" Visibility="{Binding Source={x:Static settings:Settings.Default}, Path=useDailyWc, Mode=TwoWay}" />
             <Label x:Name="labelWcDoc" Content="Document Words" Foreground="#FFB4B4B4" Visibility="{Binding Source={x:Static settings:Settings.Default}, Path=useDocWc, Mode=TwoWay}" />
         </StatusBar>
-        <TextBox x:Name="metaview" TextWrapping="Wrap" Text="{Binding Instance.Meta}" Margin="10,49,10,10" Grid.Column="1" Background="#FFA2A2A2" FontSize="18" BorderBrush="Black" AcceptsTab="True"/>
         <GridSplitter Margin="0,21,0,0" Width="4" Background="#FF383838"/>
         <GridSplitter HorizontalAlignment="Stretch" Height="4" VerticalAlignment="Top" ResizeDirection="Rows" Grid.Row="1" Grid.ColumnSpan="2" Background="#FF383838"/>
         <Label Content="Meta" HorizontalAlignment="Left" Margin="10,23,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.577" Height="26" Foreground="#FFC9C9C9" FontWeight="Bold" FontSize="14" Padding="0" VerticalContentAlignment="Center" Grid.Column="1">
@@ -103,7 +102,7 @@
                 <DataGridTextColumn Binding="{Binding WordCountTarget}" ClipboardContentBinding="{x:Null}" Header="Target"/>
             </DataGrid.Columns>
         </DataGrid>
-        <RichTextBox x:Name="rtb" Margin="10,49,10,10" Block.LineHeight="1" KeyUp="Rtb_KeyUp" SpellCheck.IsEnabled="{Binding IsChecked, ElementName=spellcheckMenuItem, Mode=TwoWay}" VerticalScrollBarVisibility="Visible" Background="#FFA2A2A2" FontSize="18" Padding="20,1" BorderBrush="#FF6C6C6C" AcceptsTab="True">
+        <RichTextBox x:Name="rtb" Margin="10,49,10,10" Block.LineHeight="1" KeyUp="Rtb_KeyUp" SpellCheck.IsEnabled="{Binding IsChecked, ElementName=spellcheckMenuItem, Mode=TwoWay}" VerticalScrollBarVisibility="Visible" Background="#FFA2A2A2" FontSize="18" Padding="20,1" BorderBrush="Black" AcceptsTab="True">
             <FlowDocument>
                 <Paragraph>
                     <Run Text="Document Panel"/>
@@ -130,6 +129,13 @@
                 </StackPanel>
             </Grid>
         </Grid>
+        <RichTextBox x:Name="rtbmeta" Margin="8,49,9,6" Block.LineHeight="1" KeyUp="Rtb_KeyUp" SpellCheck.IsEnabled="{Binding IsChecked, ElementName=spellcheckMenuItem, Mode=TwoWay}" VerticalScrollBarVisibility="Visible" Background="#FFA2A2A2" FontSize="18" Padding="20,1" BorderBrush="Black" AcceptsTab="True" Grid.Column="1">
+            <FlowDocument>
+                <Paragraph>
+                    <Run Text="Document Panel"/>
+                </Paragraph>
+            </FlowDocument>
+        </RichTextBox>
 
     </Grid>
 </Window>
