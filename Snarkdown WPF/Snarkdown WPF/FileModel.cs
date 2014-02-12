@@ -134,9 +134,7 @@ namespace Snarkdown_WPF
         /// <param name="path">filename to initialize</param>
         public void Initialize(string path, bool isRoot)
         {
-            //db.w(path);
             Model.Instance.docModels.Add(this);
-            //db.w("INIT FM: " + path);
             // set up and calculate all variables
             pathFile = path;
             //myProject = creator;
@@ -148,13 +146,40 @@ namespace Snarkdown_WPF
             GetSnippet();
             GetKindleFileSize();
             GetMetaFile();
+            GetMetaTags();
             GetSummary();
             GetEditDate();
+            GetWordCount();
 
             if (isRoot == true)
             {
                 pathRelative = "ROOT DIR";
                 isVisible = false;
+            }
+        }
+
+        public void GetWordCount()
+        {
+            if (textContents != null && textContents.Length > 0)
+            {
+                wordCount = WordCounter.CountWordsInString(textContents);
+                wordCountTarget = 500; // TODO: get real target from Meta
+            }
+            else if (Type == TreeItemType.Folder)
+            {
+                wordCount = 0;
+                wordCountTarget = 0;
+                foreach (DocModel d in children)
+                {
+                    d.GetWordCount();
+                    wordCount += d.wordCount;
+                    wordCountTarget += d.wordCountTarget;
+                }
+            }
+            else
+            {
+                wordCount = 0;
+                wordCountTarget = 0;
             }
         }
 
@@ -231,11 +256,15 @@ namespace Snarkdown_WPF
             }
             else if (CheckFilePath(false) && metaItemType == TreeItemType.Meta)
             {
+                
                 //metaPath = pathFile;
                 //metaExists = CheckFilePath(metaPath);
             }
         }
-
+        private void GetMetaTags ()
+        {
+            // do gathering of meta info from here
+        }
         private void GetFileName()
         {
             if (CheckFilePath(true))
@@ -301,26 +330,6 @@ namespace Snarkdown_WPF
 
         private void GetItemVisibility()
         {
-            // does the file exist for us to check?
-            /*
-            if (File.Exists(pathFile))
-            {
-                // check to see if it's read only or hidden
-                string at = File.GetAttributes(pathFile).ToString().ToLower();
-                db.w("File Attributes: " + pathFile + at);
-                if (at.Contains("readonly"))
-                {
-                    isReadOnly = true;
-                }
-                if (at.Contains("hidden"))
-                {
-                    isFsHidden = true;
-                }
-            }*/
-            /*else
-            {
-                isVisible = false;
-            }*/
             if (metaItemType == TreeItemType.Meta || (metaItemType == TreeItemType.Other && (File.Exists(pathFile) != true)))
             {
                 isVisible = false;

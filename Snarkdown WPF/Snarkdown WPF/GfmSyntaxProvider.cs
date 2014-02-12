@@ -96,7 +96,12 @@ namespace GfmSyntax
                     {
                         for (int i = 0; i < rule.matches.Count; i++)
                         {
-                            rule.markups[i].ApplyPropertyValue(TextElement.BackgroundProperty, new SolidColorBrush(rule.color));
+                            SolidColorBrush myColor = new SolidColorBrush(rule.color);
+                            SolidColorBrush myColor2 = new SolidColorBrush(rule.color);
+                            myColor2.Opacity = .5f;
+                            rule.markups[i].ApplyPropertyValue(TextElement.BackgroundProperty, myColor2);
+                            //rule.markups[i].ApplyPropertyValue(TextElement.ForegroundProperty, myColor);
+                            //rule.markups[i].ApplyPropertyValue(TextElement.FontWeightProperty, myColor);
                             //rule.markups[i].ApplyPropertyValue(TextElement., "markup");
                         }
                     }

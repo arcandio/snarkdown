@@ -160,6 +160,7 @@ namespace Snarkdown_WPF
                 if (i != null)
                 {
                     Model.Instance.CurrentDocument = i;
+                    Model.Instance.CountAllWords();
                 }
                 //db.w(""+i);
             }
@@ -167,10 +168,10 @@ namespace Snarkdown_WPF
 
         private void Rtb_KeyUp(object sender, RoutedEventArgs e)
         {
-            //db.w("caught changed args");
-            Model.Instance.gfm.CheckAllBlocks();
+            Model.Instance.gfm.CheckAllBlocks(); // place in timer block
             // send content to DocModel
             Model.Instance.Content = new TextRange(rtb.Document.ContentStart, rtb.Document.ContentEnd).Text;
+            Model.Instance.CountAllWords();
         }
 
     }

@@ -41,6 +41,10 @@ namespace Snarkdown_WPF
         public MainWindow mw;
         public RichTextBox rtb;
         private bool isProjectBlank;
+        public int wcDay = 0;
+        public int wcDoc = 0;
+        public int wcProj = 0;
+        
         public bool IsProjectBlank
         {
             get { return isProjectBlank; }
@@ -102,10 +106,10 @@ namespace Snarkdown_WPF
                     instance.Meta = CurrentDocument.Meta;
                     NotifyPropertyChanged();
                 }*/
-                db.w("Set CurrentDocument");
+                //db.w("Set CurrentDocument");
             }
         }
-
+        /*
         public bool useDocWc = true;
         public bool UseDocWc
         {
@@ -124,7 +128,7 @@ namespace Snarkdown_WPF
             get { return useDayWc; }
             set { useDayWc = value; NotifyPropertyChanged(); }
         }
-       
+        */
         /// <summary>
         /// the path to the project folder
         /// </summary>
@@ -166,9 +170,9 @@ namespace Snarkdown_WPF
             get
             {
                 string t = "";
-                if (Instance.currentDocument != null && Instance.currentDocument.meta != null)
+                if (Instance.CurrentDocument != null && Instance.CurrentDocument.meta != null)
                 {
-                    t = Instance.currentDocument.meta;
+                    t = Instance.CurrentDocument.meta;
                 }
                 return t;
             }
@@ -179,7 +183,7 @@ namespace Snarkdown_WPF
                     Instance.currentDocument.meta = value;
                 }
                 NotifyPropertyChanged();
-                //db.w(" meta changed ");
+                db.w(" meta changed ");
             }
         }
         public string exportPath = "";
@@ -248,8 +252,10 @@ namespace Snarkdown_WPF
                 // put contents to text box
                 rtb.Document.Blocks.Clear();
                 rtb.AppendText(Content);
+                
                 // highlight text
                 gfm.CheckAllBlocks();
+                CountAllWords();
                 IsProjectBlank = false;
                 NotifyPropertyChanged();
             }
@@ -323,6 +329,7 @@ namespace Snarkdown_WPF
             ZipFile.CreateFromDirectory(Model.Instance.projectPath, backupPath, CompressionLevel.Fastest, true);
             return backupPath;
         }
+        
         public DocModel GetDocByFilename(string path)
         {
             DocModel dm = new DocModel();
@@ -336,11 +343,29 @@ namespace Snarkdown_WPF
             NotifyPropertyChanged();
             return dm;
         }
-        public void SetOpenDoc()
+        public void CountAllWords ()
         {
-
-
+            instance.wcProj = 0;
+            rootObject.GetWordCount();
+            /*foreach (DocModel d in docModels)
+            {
+                if (d.Type == TreeItemType.Text)
+                {
+                    instance.wcProj += d.WordCount;
+                }
+            }*/
+            instance.wcDoc = currentDocument.wordCount;
+            instance.wcDay = 777;
+            if (instance.mw != null && instance.mw.labelWcProj != null)
+            {
+                instance.mw.labelWcProj.Content = "Project: "+ wcProj + "w"; //works, but not testable
+                instance.mw.labelWcDay.Content = "Today: " + wcDay + "w";
+                instance.mw.labelWcDoc.Content = "Document:" + wcDoc + "w";
+                //string Model.Instance.WcProj;
+                //NotifyPropertyChanged();
+            }
         }
+
         #endregion
     }
 }

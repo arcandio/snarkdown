@@ -90,6 +90,19 @@ namespace SDWPF_Testing
             Assert.IsTrue(size > 30, "Zip file is blank");
             File.Delete(backupPath);
         }
+        [TestMethod]
+        public void Model_WordCountProject ()
+        {
+            // arrange
+            int wordCount = 860;
+            float margin = 0.01f;
+            SetupTestUi();
+            // act
+            Model.Instance.CountAllWords();
+            // assert
+            Assert.AreEqual(wordCount, Model.Instance.wcProj, wordCount * margin, "Project returned wrong word count");
+            Assert.AreEqual(wordCount, Model.Instance.wcProj, "Project returned wrong word count");
+        }
 
         public void SetupTestUi ()
         {

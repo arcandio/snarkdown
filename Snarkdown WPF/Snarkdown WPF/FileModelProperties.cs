@@ -122,6 +122,17 @@ namespace Snarkdown_WPF
                 NotifyPropertyChanged();
             }
         }
+        public int WordCount
+        {
+            get { return wordCount; }
+            set { }
+        }
+        
+        public int WordCountTarget
+        {
+            get { return wordCountTarget; }
+            set { wordCountTarget = value; NotifyPropertyChanged(); }
+        }
         
     }
 }

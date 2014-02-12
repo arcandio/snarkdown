@@ -10,6 +10,11 @@ namespace Snarkdown_WPF
     {
         static private bool[] m_spaceChar;
 
+        static WordCounter ()
+        {
+            initSpaceCharTable();
+        }
+
         static public void initSpaceCharTable()
         {
             m_spaceChar = new bool[256];

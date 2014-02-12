@@ -34,5 +34,64 @@ namespace Snarkdown_WPF.Properties {
                 this["lastPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.DateTime lastDWCDate {
+            get {
+                return ((global::System.DateTime)(this["lastDWCDate"]));
+            }
+            set {
+                this["lastDWCDate"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int lastDWC {
+            get {
+                return ((int)(this["lastDWC"]));
+            }
+            set {
+                this["lastDWC"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool useDailyWc {
+            get {
+                return ((bool)(this["useDailyWc"]));
+            }
+            set {
+                this["useDailyWc"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool useDocWc {
+            get {
+                return ((bool)(this["useDocWc"]));
+            }
+            set {
+                this["useDocWc"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool useProjWc {
+            get {
+                return ((bool)(this["useProjWc"]));
+            }
+            set {
+                this["useProjWc"] = value;
+            }
+        }
     }
 }
