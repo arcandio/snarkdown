@@ -104,6 +104,7 @@
     <Compile Include="FileModelProperties.cs" />
     <Compile Include="GfmSyntaxProvider.cs" />
     <Compile Include="Model.cs" />
+    <Compile Include="ModelFileMonitor.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Utilities.cs" />
     <Compile Include="WordCounter.cs" />

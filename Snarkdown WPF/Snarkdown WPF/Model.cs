@@ -20,22 +20,10 @@ using System.IO.Compression;
 namespace Snarkdown_WPF
 {
 
-   /* public class FileList : ObservableCollection<DocModel>
-    {
-        public FileList() : base()
-        {
-            // debug constructor automatically loads the sample project. TODO: Do not ship!
-            Model.Instance.currentDocument = new DocModel(@"SampleProject");
-            foreach (DocModel fm in Model.Instance.docModels)
-            {
-                Add(fm);
-            }
-        }
-    }*/
     /// <summary>
     /// the model of all data in the program
     /// </summary>
-    public sealed class Model : INotifyPropertyChanged
+    public sealed partial class Model : INotifyPropertyChanged
     {
         #region Fields
         public MainWindow mw;
@@ -45,6 +33,7 @@ namespace Snarkdown_WPF
         public int wcDay = 0;
         public int wcDoc = 0;
         public int wcProj = 0;
+
         
         public bool IsProjectBlank
         {
@@ -265,6 +254,9 @@ namespace Snarkdown_WPF
                 gfm.CheckAllBlocks(Model.Instance.rtb);
                 gfm.CheckAllBlocks(Model.Instance.rtbmeta);
                 CountAllWords();
+                
+                // Setup file watcher
+                SetupFsw();
                 IsProjectBlank = false;
                 NotifyPropertyChanged();
             }
@@ -298,6 +290,8 @@ namespace Snarkdown_WPF
                 // clear all the documents and fields on Model.
                 Model.Instance.LoadProject(rootPath);
             }
+            // set up file watcher
+            fsw.Path = projectPath;
         }
         public void ExportProject ()
         {

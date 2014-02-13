@@ -353,9 +353,15 @@ namespace Snarkdown_WPF
                 // load file
                 if (metaItemType == TreeItemType.Text || metaItemType == TreeItemType.Project)
                 {
-                    using (StreamReader sr = new StreamReader(pathFile))
+                    //using (StreamReader sr = new StreamReader(pathFile))
+                    FileStream fs = DirectoryHelper.GetStream(pathFile, 20);
+                    if (fs != null)
                     {
-                        textContents = sr.ReadToEnd();
+                        using (StreamReader sr = new StreamReader(fs))
+                        {
+                            textContents = sr.ReadToEnd();
+                        }
+                        fs.Close();
                     }
                 }
             }

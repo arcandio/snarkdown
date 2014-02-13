@@ -74,7 +74,7 @@ namespace Snarkdown_WPF
     }
     static class DirectoryHelper
     {
-        const string validFileTypes = ".md .mkdn .txt .markdown .mmd";
+        public const string validFileTypes = ".md .mkdn .txt .markdown .mmd";
         /// <summary>
         /// Find the root directory of a given file
         /// </summary>
@@ -201,7 +201,24 @@ namespace Snarkdown_WPF
 
             return r;
         }
-
+        static public FileStream GetStream(string path, int retries)
+        {
+            while (retries > 0)
+            {
+                retries--;
+                try
+                {
+                    FileStream filestream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
+                    if (filestream.CanWrite == true)
+                        return filestream;
+                }
+                catch (Exception e)
+                {
+                    db.w("File opening exception: " + e.ToString());
+                }
+            }
+            return null;
+        }
     }
     static public class db
     {

@@ -19,6 +19,8 @@ namespace SDWPF_Testing
     [TestClass]
     public class ModelTests
     {
+        Random rand = new Random();
+
         [TestMethod]
         public void Model_LoadProject()
         {
@@ -106,7 +108,7 @@ namespace SDWPF_Testing
         public void Model_LoadContent ()
         {
             // arrange
-            Random rand = new Random();
+            //Random rand = new Random();
             string tempFileContents = "Test File: "+rand.Next();
             string tempFileLocation = "TestProject\\temp.md";
             string returnedContents = "";
@@ -141,7 +143,7 @@ namespace SDWPF_Testing
             string returnedContents = "";
             string returnedChanges = "";
             string rtbContents = "";
-            string rtbChanges = "";
+            //string rtbChanges = "";
             DocModel ourTestDoc;
             //PrivateObject mw;
             // act
@@ -174,6 +176,52 @@ namespace SDWPF_Testing
             Assert.AreEqual(tempFileChanges, returnedChanges, "Saved contents were not the same");
             File.Delete(tempFileLocation);
         }
+        [TestMethod]
+        public void Model_FswCreated()
+        {
+            // arrange
+            //string newFilePath = "TestProject\\TestFile" + rand.Next() + ".md";
+            string newFilePath = "TestProject\\TestFile.md";
+            string contents = "";
+            //string newFullPath;
+            int fileCount = 0;
+            int newFileCount = 0;
+            DocModel parent;
+            DocModel child;
+            DocModel parentsLastChild;
+            bool containsNewChild = false;
+            //FileSystemWatcher fsw;
+            // act
+            File.Delete(newFilePath);
+            SetupTestUi();
+            fileCount = Model.Instance.docModels.Count();
+            contents = "# new File Text: " + Environment.NewLine + rand.Next();
+            using (StreamWriter sw = new StreamWriter(newFilePath))
+            {
+                sw.Write(contents);
+                //newFullPath = Path.GetFullPath(newFilePath);
+                
+            }
+            System.Threading.Thread.Sleep(100);
+            newFileCount = Model.Instance.docModels.Count();
+            parent = Model.Instance.GetDocByFilename("TestProject");
+            child = Model.Instance.GetDocByFilename(newFilePath);
+            parentsLastChild = parent.children[parent.children.Count-1];
+
+            foreach (DocModel d in parent.children)
+            {
+                if (d.pathFile == newFilePath)
+                    containsNewChild = true;
+                db.w(d.pathFile);
+            }
+
+            // assert
+            Assert.AreEqual(fileCount + 1, newFileCount, "Failed to add file to the Model's list");
+            Assert.IsTrue(Model.Instance.docModels.Contains(child), "New file not found in Model List");
+            Assert.IsTrue(containsNewChild, "Child not added to parent's children list");
+            Assert.AreEqual(contents, child.textContents, "contents differ from expected");
+            File.Delete(newFilePath);
+        }
 
         string testProjectPath = "TestProject\\project.md";
         public void SetupTestUi ()
@@ -193,6 +241,8 @@ namespace SDWPF_Testing
             Model.Instance.rtbmeta = rtbmeta;
             Model.Instance.mw = mw;
             Model.Instance.LoadProject(projectPath);
+            Model.Instance.autoMode = true;
+            Model.Instance.alwaysAcceptFsChange = true;
 
             Assert.IsNotNull(Model.Instance, "Model Instance is Null");
             Assert.IsNotNull(Model.Instance.ProjectPath, "Project path is Null");

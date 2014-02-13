@@ -109,6 +109,13 @@
                 </Paragraph>
             </FlowDocument>
         </RichTextBox>
+        <RichTextBox x:Name="rtbmeta" Margin="8,49,9,6" Block.LineHeight="1" KeyUp="Rtb_KeyUp" SpellCheck.IsEnabled="{Binding IsChecked, ElementName=spellcheckMenuItem, Mode=TwoWay}" VerticalScrollBarVisibility="Visible" Background="#FFA2A2A2" FontSize="18" Padding="20,1" BorderBrush="Black" AcceptsTab="True" Grid.Column="1">
+            <FlowDocument>
+                <Paragraph>
+                    <Run Text="Document Panel"/>
+                </Paragraph>
+            </FlowDocument>
+        </RichTextBox>
         <Grid x:Name="projectOverlay" Margin="0" Grid.RowSpan="3" Background="#B2000000" Grid.ColumnSpan="2" Visibility="{Binding Instance.IsProjectBlank, Converter={StaticResource BooleanToVisibilityConverter}}" SnapsToDevicePixels="True" d:IsHidden="True">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
@@ -129,13 +136,6 @@
                 </StackPanel>
             </Grid>
         </Grid>
-        <RichTextBox x:Name="rtbmeta" Margin="8,49,9,6" Block.LineHeight="1" KeyUp="Rtb_KeyUp" SpellCheck.IsEnabled="{Binding IsChecked, ElementName=spellcheckMenuItem, Mode=TwoWay}" VerticalScrollBarVisibility="Visible" Background="#FFA2A2A2" FontSize="18" Padding="20,1" BorderBrush="Black" AcceptsTab="True" Grid.Column="1">
-            <FlowDocument>
-                <Paragraph>
-                    <Run Text="Document Panel"/>
-                </Paragraph>
-            </FlowDocument>
-        </RichTextBox>
 
     </Grid>
 </Window>
