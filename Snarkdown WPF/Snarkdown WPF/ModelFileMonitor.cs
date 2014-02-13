@@ -50,7 +50,7 @@ namespace Snarkdown_WPF
                 bool acceptChange = alwaysAcceptFsChange;
                 if (autoMode == false)
                 {
-                    string text = "A file has been added to the project folder: " + Environment.NewLine;
+                    string text = "A " + ext + " file has been added to the project folder: " + Environment.NewLine;
                     text += e.FullPath + Environment.NewLine;
                     text += "Do you want to add it to the project?";
                     string caption = "File Added";
@@ -63,17 +63,27 @@ namespace Snarkdown_WPF
                 }
                 if (acceptChange == true)
                 {
-                    // find parent
-                    string directory = Path.GetDirectoryName(e.FullPath);
-                    DocModel parent = GetDocByFilename(directory);
-                    // create docmodel
-                    DocModel newFile = new DocModel(e.FullPath, false);
-                    // add to parent
-                    parent.children.Add(newFile);
-                    // add to list
-                    //DocModels.Add(newFile);
-                    // refresh list
-                    Model.Instance.NotifyPropertyChanged();
+                    if (ext != ".mdmeta")
+                    {
+                        // find parent
+                        string directory = Path.GetDirectoryName(e.FullPath);
+                        DocModel parent = GetDocByFilename(directory);
+                        // create docmodel
+                        DocModel newFile = new DocModel(e.FullPath, false);
+                        // add to parent
+                        parent.children.Add(newFile);
+                        // add to list
+                        //DocModels.Add(newFile);
+                        // refresh list
+                        Model.Instance.NotifyPropertyChanged();
+                    }
+                    else
+                    {
+                        string nonMetaPath = e.FullPath.Substring(0, e.FullPath.LastIndexOf("meta"));
+                        DocModel nonMetaObject = GetDocByFilename(nonMetaPath);
+                        nonMetaObject.Update();
+                        Model.Instance.NotifyPropertyChanged();
+                    }
                 }
             }
         }
@@ -86,9 +96,9 @@ namespace Snarkdown_WPF
                 bool acceptChange = alwaysAcceptFsChange;
                 if (autoMode == false)
                 {
-                    string text = "A file has been removed to the project folder: " + Environment.NewLine;
+                    string text = "A " + ext + " file has been removed to the project folder: " + Environment.NewLine;
                     text += e.FullPath + Environment.NewLine;
-                    text += "Do you want remove it from the project?";
+                    text += "Do you want to remove it from the project?";
                     string caption = "File Deleted";
                     MessageBoxButton button = MessageBoxButton.YesNo;
                     MessageBoxResult result = MessageBox.Show(text, caption, button);
@@ -99,33 +109,114 @@ namespace Snarkdown_WPF
                 }
                 if (acceptChange == true)
                 {
-                    // find parent
-                    string directory = Path.GetDirectoryName(e.FullPath);
-                    DocModel parent = GetDocByFilename(directory);
-                    // find object
-                    DocModel delFile = GetDocByFilename(e.FullPath);
-                    // remove from to parent
-                    parent.children.Remove(delFile);
-                    // Remvove from list
-                    DocModels.Remove(delFile);
-                    //delFile
-                    // refresh list
-                    Model.Instance.NotifyPropertyChanged();
+                    if (ext != ".mdmeta")
+                    {
+                        // find parent
+                        string directory = Path.GetDirectoryName(e.FullPath);
+                        DocModel parent = GetDocByFilename(directory);
+                        // find object
+                        DocModel delFile = GetDocByFilename(e.FullPath);
+                        // remove from to parent
+                        parent.children.Remove(delFile);
+                        // Remvove from list
+                        DocModels.Remove(delFile);
+                        //delFile
+                        // refresh list
+                        Model.Instance.NotifyPropertyChanged();
+                    }
+                    else
+                    {
+                        string nonMetaPath = e.FullPath.Substring(0, e.FullPath.LastIndexOf("meta"));
+                        DocModel nonMetaObject = GetDocByFilename(nonMetaPath);
+                        nonMetaObject.Update();
+                        Model.Instance.NotifyPropertyChanged();
+                    }
                 }
             }
-
-            // remove docmodel from list
         }
         private void Fs_FileWasChanged(object sender, FileSystemEventArgs e)
         {
             db.w("File Event: " + e.FullPath + " " + e.ChangeType);
+            string ext = Path.GetExtension(e.FullPath);
+            if (DirectoryHelper.validFileTypes.Contains(ext) || ext == ".mdmeta")
+            {
+                bool acceptChange = alwaysAcceptFsChange;
+                if (autoMode == false)
+                {
+                    string text = "A "+ext+" file has been changed in the project folder: " + Environment.NewLine;
+                    text += e.FullPath + Environment.NewLine;
+                    text += "Do you want to update it?";
+                    string caption = "File Changed";
+                    MessageBoxButton button = MessageBoxButton.YesNo;
+                    MessageBoxResult result = MessageBox.Show(text, caption, button);
+                    if (result == MessageBoxResult.Yes)
+                        acceptChange = true;
+                    else
+                        acceptChange = false;
+                }
+                if (acceptChange == true)
+                {
+                    if (ext != ".mdmeta")
+                    {
+                        // find object
+                        DocModel changeFile = GetDocByFilename(e.FullPath);
+                        changeFile.Update();
+                        // refresh list
+                        Model.Instance.NotifyPropertyChanged();
+                    }
+                    else
+                    {
+                        string nonMetaPath = e.FullPath.Substring(0,e.FullPath.LastIndexOf("meta"));
+                        DocModel fileObject = GetDocByFilename(nonMetaPath);
+                        db.w(fileObject.pathFile + " --- "+ e.FullPath);
+                        fileObject.Update();
+                    }
+                }
+            }
 
             // update contents of file/meta
         }
         private void Fs_FileWasRenamed(object sender, RenamedEventArgs e)
         {
             db.w("File Event: " + e.FullPath + " " + e.ChangeType);
-            
+            string ext = Path.GetExtension(e.FullPath);
+            if (DirectoryHelper.validFileTypes.Contains(ext) || ext == ".mdmeta")
+            {
+                bool acceptChange = alwaysAcceptFsChange;
+                if (autoMode == false)
+                {
+                    string text = "A " + ext + " file has been renamed in the project folder: " + Environment.NewLine;
+                    text += e.FullPath + Environment.NewLine;
+                    text += "Do you want to update it?";
+                    string caption = "File Renamed";
+                    MessageBoxButton button = MessageBoxButton.YesNo;
+                    MessageBoxResult result = MessageBox.Show(text, caption, button);
+                    if (result == MessageBoxResult.Yes)
+                        acceptChange = true;
+                    else
+                        acceptChange = false;
+                }
+                if (acceptChange == true)
+                {
+                    if (ext != ".mdmeta")
+                    {
+                        // find object
+                        DocModel changeFile = GetDocByFilename(e.OldFullPath);
+                        changeFile.pathFile = e.FullPath;
+                        changeFile.Update();
+                        // refresh list
+                        Model.Instance.NotifyPropertyChanged();
+                    }
+                    else
+                    {
+                        string nonMetaPath = e.FullPath.Substring(0, e.OldFullPath.LastIndexOf("meta"));
+                        DocModel fileObject = GetDocByFilename(nonMetaPath);
+                        db.w(fileObject.pathFile + " --- " + e.FullPath);
+                        fileObject.Update();
+                    }
+                }
+            }
+
             // get new and old paths
             // change docmodel paths and name
         }

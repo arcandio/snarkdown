@@ -194,6 +194,14 @@ namespace Snarkdown_WPF
             // get edit date
             // do I have any new children?
             // update children (recusion)
+            GetContents();
+            GetSnippet();
+            GetKindleFileSize();
+            GetMetaFile();
+            GetMetaTags();
+            GetSummary();
+            GetEditDate();
+            GetWordCount();
 
         }
 

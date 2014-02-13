@@ -30,11 +30,16 @@ namespace SDWPF_Testing
         [TestMethod]
         public void Model_CorrectNumberOfDocuments ()
         {
-            SetupTestUi();
-            // act
+            // arrange
             int numberOfFiles = 6;
+            int actual = 0;
+            // act
+            Wait();
+            SetupTestUi();
+            Wait();
+            actual = Model.Instance.DocModels.Count;
             // assert
-            Assert.AreEqual(numberOfFiles, Model.Instance.DocModels.Count, "Wrong number of files");
+            Assert.AreEqual(numberOfFiles, actual, "Wrong number of files");
         }
         [TestMethod]
         public void Model_NewProject ()
@@ -63,7 +68,7 @@ namespace SDWPF_Testing
             // arrange
             string outputContents = "";
             SetupTestUi();
-            Model.Instance.exportPath = "TestProject\\test.html";
+            Model.Instance.exportPath = "TestProject\\testExport.html";
 
             // act
             Model.Instance.ExportProject();
@@ -110,7 +115,7 @@ namespace SDWPF_Testing
             // arrange
             //Random rand = new Random();
             string tempFileContents = "Test File: "+rand.Next();
-            string tempFileLocation = "TestProject\\temp.md";
+            string tempFileLocation = "TestProject\\tempLoad.md";
             string returnedContents = "";
             string rtbContents = "";
             DocModel ourTestDoc;
@@ -126,20 +131,21 @@ namespace SDWPF_Testing
             rtbContents = new TextRange(Model.Instance.rtb.Document.ContentStart, 
                 Model.Instance.rtb.Document.ContentEnd).Text.Trim();
             // assert
+            File.Delete(tempFileLocation);
             Assert.IsNotNull(ourTestDoc, "Our Test Doc was null");
             Assert.AreEqual(tempFileContents, returnedContents, "Contents were not the same as loaded content");
             Assert.AreEqual(tempFileContents, Model.Instance.Content, "Contents were not the same as Model's content");
             Assert.AreEqual(tempFileContents, rtbContents, "Contents were not the same as rich text box");
-            File.Delete(tempFileLocation);
+            
         }
         [TestMethod]
         public void Model_SaveContent()
         {
+            Wait();
             // arrange
-            Random rand = new Random();
             string tempFileContents = "Test File: " + rand.Next();
             string tempFileChanges = "Test File Changes: " + rand.Next();
-            string tempFileLocation = "TestProject\\temp.md";
+            string tempFileLocation = "TestProject\\tempSave.md";
             string returnedContents = "";
             string returnedChanges = "";
             string rtbContents = "";
@@ -151,6 +157,7 @@ namespace SDWPF_Testing
             {
                 sw.Write(tempFileContents);
             }
+            Wait();
             SetupTestUi();
             //mw = new PrivateObject(Model.Instance.mw);
             ourTestDoc = Model.Instance.GetDocByFilename(tempFileLocation);
@@ -163,24 +170,26 @@ namespace SDWPF_Testing
             Model.Instance.Refresh();
             ourTestDoc.textContents = tempFileChanges;
             ourTestDoc.Save();
-            using (StreamReader sr = new StreamReader(tempFileLocation))
+            using (StreamReader sr = new StreamReader(new FileStream(tempFileLocation,FileMode.Open, FileAccess.Read, FileShare.Read)))
             {
                 returnedChanges = sr.ReadToEnd();
+
             }
 
             // assert
+            File.Delete(tempFileLocation);
             Assert.IsNotNull(ourTestDoc, "Our Test Doc was null");
             Assert.AreEqual(tempFileContents, returnedContents, "Contents were not the same as loaded content");
             Assert.AreEqual(tempFileChanges, Model.Instance.Content, "Contents were not the same as Model's content");
             Assert.AreEqual(tempFileContents, rtbContents, "Contents were not the same as rich text box");
             Assert.AreEqual(tempFileChanges, returnedChanges, "Saved contents were not the same");
-            File.Delete(tempFileLocation);
+            
         }
         [TestMethod]
         public void Model_FswCreated()
         {
             // arrange
-            string newFilePath = "TestProject\\TestFile.md";
+            string newFilePath = "TestProject\\TestFileCreated.md";
             string contents = "";
             int fileCount = 0;
             int newFileCount = 0;
@@ -197,7 +206,7 @@ namespace SDWPF_Testing
             {
                 sw.Write(contents);
             }
-            System.Threading.Thread.Sleep(100);
+            Wait();
             newFileCount = Model.Instance.docModels.Count();
             parent = Model.Instance.GetDocByFilename("TestProject");
             child = Model.Instance.GetDocByFilename(newFilePath);
@@ -209,7 +218,7 @@ namespace SDWPF_Testing
                     containsNewChild = true;
                 db.w(d.pathFile);
             }
-
+            Wait();
             // assert
             Assert.AreEqual(fileCount + 1, newFileCount, "Failed to add file to the Model's list");
             Assert.IsTrue(Model.Instance.docModels.Contains(child), "New file not found in Model List");
@@ -221,7 +230,7 @@ namespace SDWPF_Testing
         public void Model_FswDeleted()
         {
             // arrange
-            string newFilePath = "TestProject\\TestFile.md";
+            string newFilePath = "TestProject\\TestFileDeleted.md";
             string contents = "";
             int fileCount = 0;
             int newFileCount = 0;
@@ -234,14 +243,14 @@ namespace SDWPF_Testing
             {
                 sw.Write(contents);
             }
-            System.Threading.Thread.Sleep(100);
+            Wait();
             SetupTestUi();
             fileCount = Model.Instance.docModels.Count();
             parent = Model.Instance.GetDocByFilename("TestProject");
             parentCount = parent.children.Count();
 
             File.Delete(newFilePath);
-            System.Threading.Thread.Sleep(100);
+            Wait();
             newFileCount = Model.Instance.docModels.Count();
             newParentCount = parent.children.Count();
             
@@ -249,7 +258,76 @@ namespace SDWPF_Testing
             Assert.AreEqual(fileCount - 1, newFileCount, "Failed to remove file to the Model's list");
             Assert.AreEqual(parentCount - 1, newParentCount, "Failed to remove file to the Model's list");
         }
-
+        [TestMethod]
+        public void Model_MetaChanged()
+        {
+            // assemble
+            string filePath = "TestProject\\MetaTestFileChanged.md";
+            string metaContents = "meta contents: " + rand.Next();
+            string metaReturned ="";
+            using (StreamWriter sw = new StreamWriter(filePath))
+            {
+                sw.Write("testfile");
+            }
+            using (StreamWriter sw = new StreamWriter(filePath+"meta"))
+            {
+                sw.Write("");
+            }
+            Wait();
+            // act
+            SetupTestUi();
+            using (StreamWriter sw = new StreamWriter(filePath + "meta"))
+            {
+                sw.Write(metaContents);
+            }
+            Wait();
+            metaReturned = Model.Instance.GetDocByFilename(filePath).Meta;
+            Wait();
+            File.Delete(filePath);
+            File.Delete(filePath + "meta");
+            Wait();
+            // assert
+            Assert.AreEqual(metaContents, metaReturned, "Contents not reloaded");
+        }
+        [TestMethod]
+        public void Model_ContentChanged()
+        {
+            // assemble
+            string filePath = "TestProject\\MetaTestFileChanged.md";
+            string newContents = "meta contents: " + rand.Next();
+            string contentsReturned = "";
+            using (StreamWriter sw = new StreamWriter(filePath))
+            {
+                sw.Write("testfile");
+            }
+            Wait();
+            // act
+            SetupTestUi();
+            using (StreamWriter sw = new StreamWriter(filePath + "meta"))
+            {
+                sw.Write(newContents);
+            }
+            Wait();
+            contentsReturned = Model.Instance.GetDocByFilename(filePath).Meta;
+            Wait();
+            File.Delete(filePath);
+            File.Delete(filePath + "meta");
+            Wait();
+            // assert
+            Assert.AreEqual(newContents, contentsReturned, "Contents not reloaded");
+        }
+        /*
+        [TestCleanup]
+        private void Cleanup()
+        {
+            //System.Threading.Thread.Sleep(1000);
+            db.w("cleaned");
+        }
+        */
+        private void Wait()
+        {
+            System.Threading.Thread.Sleep(100);
+        }
         string testProjectPath = "TestProject\\project.md";
         public void SetupTestUi ()
         {
