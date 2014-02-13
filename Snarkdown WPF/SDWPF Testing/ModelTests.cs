@@ -180,17 +180,14 @@ namespace SDWPF_Testing
         public void Model_FswCreated()
         {
             // arrange
-            //string newFilePath = "TestProject\\TestFile" + rand.Next() + ".md";
             string newFilePath = "TestProject\\TestFile.md";
             string contents = "";
-            //string newFullPath;
             int fileCount = 0;
             int newFileCount = 0;
             DocModel parent;
             DocModel child;
             DocModel parentsLastChild;
             bool containsNewChild = false;
-            //FileSystemWatcher fsw;
             // act
             File.Delete(newFilePath);
             SetupTestUi();
@@ -199,8 +196,6 @@ namespace SDWPF_Testing
             using (StreamWriter sw = new StreamWriter(newFilePath))
             {
                 sw.Write(contents);
-                //newFullPath = Path.GetFullPath(newFilePath);
-                
             }
             System.Threading.Thread.Sleep(100);
             newFileCount = Model.Instance.docModels.Count();
@@ -221,6 +216,38 @@ namespace SDWPF_Testing
             Assert.IsTrue(containsNewChild, "Child not added to parent's children list");
             Assert.AreEqual(contents, child.textContents, "contents differ from expected");
             File.Delete(newFilePath);
+        }
+        [TestMethod]
+        public void Model_FswDeleted()
+        {
+            // arrange
+            string newFilePath = "TestProject\\TestFile.md";
+            string contents = "";
+            int fileCount = 0;
+            int newFileCount = 0;
+            int parentCount = 0;
+            int newParentCount = 0;
+            DocModel parent;
+            // act
+            contents = "# new File Text: " + Environment.NewLine + rand.Next();
+            using (StreamWriter sw = new StreamWriter(newFilePath))
+            {
+                sw.Write(contents);
+            }
+            System.Threading.Thread.Sleep(100);
+            SetupTestUi();
+            fileCount = Model.Instance.docModels.Count();
+            parent = Model.Instance.GetDocByFilename("TestProject");
+            parentCount = parent.children.Count();
+
+            File.Delete(newFilePath);
+            System.Threading.Thread.Sleep(100);
+            newFileCount = Model.Instance.docModels.Count();
+            newParentCount = parent.children.Count();
+            
+            // assert
+            Assert.AreEqual(fileCount - 1, newFileCount, "Failed to remove file to the Model's list");
+            Assert.AreEqual(parentCount - 1, newParentCount, "Failed to remove file to the Model's list");
         }
 
         string testProjectPath = "TestProject\\project.md";

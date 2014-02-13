@@ -52,7 +52,7 @@ namespace Snarkdown_WPF
                 {
                     string text = "A file has been added to the project folder: " + Environment.NewLine;
                     text += e.FullPath + Environment.NewLine;
-                    text += "Do you want to update them ?";
+                    text += "Do you want to add it to the project?";
                     string caption = "File Added";
                     MessageBoxButton button = MessageBoxButton.YesNo;
                     MessageBoxResult result = MessageBox.Show(text, caption, button);
@@ -80,6 +80,39 @@ namespace Snarkdown_WPF
         private void Fs_FileWasDeleted(object sender, FileSystemEventArgs e)
         {
             db.w("File Event: " + e.FullPath + " " + e.ChangeType);
+            string ext = Path.GetExtension(e.FullPath);
+            if (DirectoryHelper.validFileTypes.Contains(ext) || ext == ".mdmeta")
+            {
+                bool acceptChange = alwaysAcceptFsChange;
+                if (autoMode == false)
+                {
+                    string text = "A file has been removed to the project folder: " + Environment.NewLine;
+                    text += e.FullPath + Environment.NewLine;
+                    text += "Do you want remove it from the project?";
+                    string caption = "File Deleted";
+                    MessageBoxButton button = MessageBoxButton.YesNo;
+                    MessageBoxResult result = MessageBox.Show(text, caption, button);
+                    if (result == MessageBoxResult.Yes)
+                        acceptChange = true;
+                    else
+                        acceptChange = false;
+                }
+                if (acceptChange == true)
+                {
+                    // find parent
+                    string directory = Path.GetDirectoryName(e.FullPath);
+                    DocModel parent = GetDocByFilename(directory);
+                    // find object
+                    DocModel delFile = GetDocByFilename(e.FullPath);
+                    // remove from to parent
+                    parent.children.Remove(delFile);
+                    // Remvove from list
+                    DocModels.Remove(delFile);
+                    //delFile
+                    // refresh list
+                    Model.Instance.NotifyPropertyChanged();
+                }
+            }
 
             // remove docmodel from list
         }
