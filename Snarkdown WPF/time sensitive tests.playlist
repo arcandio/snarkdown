@@ -1,0 +1,1 @@
+<Playlist Version="1.0"><Add Test="SDWPF_Testing.ModelTests.Model_ContentChanged" /><Add Test="SDWPF_Testing.ModelTests.Model_FswCreated" /><Add Test="SDWPF_Testing.ModelTests.Model_MetaChanged" /><Add Test="SDWPF_Testing.ModelTests.Model_FswDeleted" /></Playlist>
