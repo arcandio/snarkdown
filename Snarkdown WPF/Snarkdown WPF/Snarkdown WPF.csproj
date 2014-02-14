@@ -103,6 +103,7 @@
     </ApplicationDefinition>
     <Compile Include="FileModelProperties.cs" />
     <Compile Include="GfmSyntaxProvider.cs" />
+    <Compile Include="MetaParsing.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="ModelFileMonitor.cs" />
     <Compile Include="Settings.cs" />

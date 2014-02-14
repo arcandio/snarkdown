@@ -32,47 +32,7 @@ namespace Snarkdown_WPF
         Other
     }
 
-    /// <summary>
-    /// Meta Extractor helper class
-    /// </summary>
-    static public class MetaExtractor
-    {
-        /// <summary>
-        /// find a value in a meta file
-        /// </summary>
-        /// <param name="inputString">the meta file to look inside</param>
-        /// <param name="searchString">the meta key to look for</param>
-        /// <returns>value: integer value or -1 for failure</returns>
-        static public int PullNumber(string inputString, string searchString)
-        {
-            int n = -1;
-
-            // get the line TODO
-
-            // get the text number
-
-            // parse to int
-
-            return n;
-        }
-        static public List<string> TagsFromString(string s)
-        {
-            List<string> tags = new List<string>();
-            string[] sep = { "," };
-            tags = s.Replace(", ", ",").Split(sep, StringSplitOptions.RemoveEmptyEntries).ToList<string>();
-            return tags;
-        }
-        static public String StringFromTags(List<string> tags)
-        {
-            string s = "";
-            if (tags != null && tags.Count > 0)
-            { 
-                s = String.Join(", ", tags);
-            }
-            return s;
-        }
-    }
-    static class DirectoryHelper
+    public static class DirectoryHelper
     {
         public const string validFileTypes = ".md .mkdn .txt .markdown .mmd";
         /// <summary>

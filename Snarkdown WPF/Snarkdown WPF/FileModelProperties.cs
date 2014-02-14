@@ -85,43 +85,18 @@ namespace Snarkdown_WPF
             get { return meta; }
             set { meta = value; NotifyPropertyChanged(); }
         }
-
-        public string TagCharacters
+        /*
+        public DocumentMetaTags DocTags
         {
-            get { return MetaExtractor.StringFromTags(tagCharacters); }
-            set
-            {
-                tagCharacters = MetaExtractor.TagsFromString(value);
-                NotifyPropertyChanged();
-            }
+            get;
+            set;
         }
-        public string TagLocations
+        public ProjectMetaTags ProjTags
         {
-            get { return MetaExtractor.StringFromTags(tagLocations); }
-            set
-            {
-                tagLocations = MetaExtractor.TagsFromString(value);
-                NotifyPropertyChanged();
-            }
+            get;
+            set;
         }
-        public string TagProgress
-        {
-            get { return MetaExtractor.StringFromTags(tagProgress); }
-            set
-            {
-                tagProgress = MetaExtractor.TagsFromString(value);
-                NotifyPropertyChanged();
-            }
-        }
-        public string TagOther
-        {
-            get { return MetaExtractor.StringFromTags(tagOther); }
-            set
-            {
-                tagOther = MetaExtractor.TagsFromString(value);
-                NotifyPropertyChanged();
-            }
-        }
+        */
         public int WordCount
         {
             get { return wordCount; }

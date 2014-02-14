@@ -31,7 +31,7 @@ namespace SDWPF_Testing
         public void Model_CorrectNumberOfDocuments ()
         {
             // arrange
-            int numberOfFiles = 6;
+            int numberOfFiles = 8;
             int actual = 0;
             // act
             Wait();
@@ -66,18 +66,21 @@ namespace SDWPF_Testing
         public void Model_ExportProject()
         {
             // arrange
-            string outputContents = "";
+
+            string outputContents = ""+rand.Next();
             SetupTestUi();
             Model.Instance.exportPath = "TestProject\\testExport.html";
-
+            File.Delete(Model.Instance.exportPath);
             // act
             Model.Instance.ExportProject();
             // assert
             using (StreamReader sr = new StreamReader(Model.Instance.exportPath))
             {
                 outputContents = sr.ReadToEnd();
+
             }
             Assert.IsTrue(File.Exists(Model.Instance.exportPath), "Export file does not exist");
+            File.Delete(Model.Instance.exportPath);
             Assert.IsTrue(outputContents.Length > 0, "Export file blank");
         }
         [TestMethod]
@@ -102,12 +105,18 @@ namespace SDWPF_Testing
             // arrange
             int wordCount = 860;
             float margin = 0.01f;
+            int countedManually = 0;
             SetupTestUi();
+            foreach (DocModel d in Model.Instance.docModels)
+            {
+                if (d.Type == TreeItemType.Text)
+                    countedManually += d.wordCount;
+            }
             // act
             Model.Instance.CountAllWords();
             // assert
-            Assert.AreEqual(wordCount, Model.Instance.wcProj, wordCount * margin, "Project returned wrong word count");
-            Assert.AreEqual(wordCount, Model.Instance.wcProj, "Project returned wrong word count");
+            //Assert.AreEqual(countedManually, Model.Instance.wcProj, wordCount * margin, "Project returned wrong word count");
+            Assert.AreEqual(countedManually, Model.Instance.wcProj, "Project returned wrong word count");
         }
         [TestMethod]
         public void Model_LoadContent ()
@@ -170,7 +179,9 @@ namespace SDWPF_Testing
             Model.Instance.Refresh();
             ourTestDoc.textContents = tempFileChanges;
             ourTestDoc.Save();
-            using (StreamReader sr = new StreamReader(new FileStream(tempFileLocation,FileMode.Open, FileAccess.Read, FileShare.Read)))
+            Wait();
+            FileStream fs = DirectoryHelper.GetStream(tempFileLocation, 20);
+            using (StreamReader sr = new StreamReader(fs))
             {
                 returnedChanges = sr.ReadToEnd();
 
