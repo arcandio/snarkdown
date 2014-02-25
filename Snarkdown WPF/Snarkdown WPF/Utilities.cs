@@ -191,4 +191,19 @@ namespace Snarkdown_WPF
             System.Diagnostics.Debug.WriteLine(w.ToUpper());
         }
     }
+    public static class ExtensionMethods
+    {
+        public static int ParseIntSilent(this string str)
+        {
+            int value = 0;
+            int.TryParse(str, out value);
+            return value;
+        }
+        public static DateTime ParseDtSilent(this string str)
+        {
+            DateTime d;
+            DateTime.TryParse(str, out d);
+            return d;
+        }
+    }
 }

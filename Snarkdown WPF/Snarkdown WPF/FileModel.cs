@@ -44,6 +44,7 @@ namespace Snarkdown_WPF
         /// <summary>
         /// words in this document item
         /// </summary>
+        public MetaContainer metaData;
         public int wordCount;
         /// <summary>
         /// target words for this document item
@@ -273,6 +274,11 @@ namespace Snarkdown_WPF
         private void GetMetaTags ()
         {
             // do gathering of meta info from here
+            if (metaData == null)
+            {
+                metaData = new MetaContainer();
+            }
+            metaData.ParseTagsFromString(meta);
         }
         private void GetFileName()
         {

@@ -49,9 +49,9 @@ namespace Snarkdown_WPF
     }
          * */
 
-    class MetaContainer
+    public class MetaContainer
     {
-        const string[] validTags = {
+        string[] validTags = {
                                         " * Characters:",
                                         " * Locations:",
                                         " * Progress:",
@@ -71,6 +71,7 @@ namespace Snarkdown_WPF
 
         public string MetaContents { get; set; }
         private List<string> metaLeftovers = new List<string>();
+
 
         private string characters;
         public string Characters
@@ -96,11 +97,11 @@ namespace Snarkdown_WPF
             get { return tags; }
             set { tags = value; }
         }
-        private int words;
-        public int Words
+        private int docWords;
+        public int DocWords
         {
-            get { return words; }
-            set { words = value; }
+            get { return docWords; }
+            set { docWords = value; }
         }
         private int docTarget;
         public int DocTarget
@@ -166,6 +167,10 @@ namespace Snarkdown_WPF
 
         public void ParseTagsFromString (string metaInput)
         {
+            if (metaInput == null || metaInput.Length < 1)
+            {
+                return;
+            }
             string[] lines = metaInput.Split(new char[] { '\n' });
             List<string> leftovers = new List<string>();
             for (int i = 0; i < lines.Length; i++)
@@ -176,7 +181,7 @@ namespace Snarkdown_WPF
                 string foundTag = "";
                 foreach (string tag in validTags)
                 {
-                    if (line.StartsWith(tag))
+                    if (line.ToLower().StartsWith(tag.ToLower()))
                     {
                         isTag = true;
                         foundTag = tag;
@@ -186,9 +191,61 @@ namespace Snarkdown_WPF
                 if (isTag)
                 {
                     // we have a tag, so parse it
-                    string value = line.Replace(foundTag, "");
+                    string value = line.Replace(foundTag, "").Trim();
                     // switch and parse
+                    switch (foundTag.ToLower())
+                    {
+                        case " * characters:":
+                            this.Characters = value;
+                            break;
+                        case " * locations:":
+                            this.Locations = value;
+                            break;
+                        case " * progress:":
+                            this.Progress = value;
+                            break;
+                        case " * tags:":
+                            this.Tags = value;
+                            break;
+                        case " * docwords:":
+                            this.DocWords = value.ParseIntSilent();
+                            break;
+                        case " * doctarget:":
+                            this.DocTarget = value.ParseIntSilent();
+                            break;
+                        case " * synopsis:":
+                            this.Synopsis = value;
+                            break;
+                        case " * title:":
+                            this.Title = value;
+                            break;
+                        case " * author:":
+                            this.Author = value;
+                            break;
+                        case " * projecttarget:":
+                            this.ProjectTarget = value.ParseIntSilent();
+                            break;
+                        case " * projectwords:":
+                            this.ProjectWords = value.ParseIntSilent();
+                            break;
+                        case " * daily:":
+                            this.Daily = value.ParseIntSilent();
+                            break;
+                        case " * dailytarget:":
+                            this.DailyTarget = value.ParseIntSilent();
+                            break;
+                        case " * duedate:":
+                            this.DueDate = value.ParseDtSilent();
+                            break;
+                        case " * pace:":
+                            this.Pace = value.ParseIntSilent();
+                            break;
+                        default:
+                            db.w("dropped a tag.");
+                            break;
+                    }
                     
+                    // end switch
                 }
                 else
                 {
