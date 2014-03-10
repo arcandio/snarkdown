@@ -97,6 +97,11 @@ namespace Snarkdown_WPF
             set;
         }
         */
+        public MetaContainer MetaData {
+            get { return metaData; }
+            set { metaData = value; NotifyPropertyChanged(); }
+
+        }
         public int WordCount
         {
             get { return wordCount; }

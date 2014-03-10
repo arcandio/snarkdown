@@ -39,10 +39,15 @@ namespace SDWPF_Testing
             // arrange
             MetaContainer mc = new MetaContainer();
             DateTime due = new DateTime(2014, 1, 1);
+            string inputstring = "";
+            string outputstring = "";
             // act
             mc.ParseTagsFromString(testData);
+            inputstring = mc.BuildTagsToString();
+            mc.ParseTagsFromString(inputstring);
+            outputstring = mc.BuildTagsToString();
             // assert
-
+            Assert.AreEqual(inputstring, outputstring);
         }
 
         string testData = " * Characters: one\n * Locations: two\n * Progress: three\n * Tags: four\n * DocWords: 5\n * DocTarget: 6\n * Synopsis: seven\n * Title: eight\n * Author: nine\n * ProjectTarget: 10\n * ProjectWords: 11\n * Daily: 12\n * DailyTarget: 13\n * DueDate: 1/1/2014\n * Pace: 15\nleftovers";

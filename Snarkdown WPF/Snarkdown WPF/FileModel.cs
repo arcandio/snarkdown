@@ -164,7 +164,8 @@ namespace Snarkdown_WPF
             if (Type == TreeItemType.Text && textContents != null && textContents.Length > 0)
             {
                 wordCount = WordCounter.CountWordsInString(textContents);
-                wordCountTarget = 500; // TODO: get real target from Meta
+                wordCountTarget = metaData.DocTarget;
+                metaData.DocWords = wordCount;
             }
             else if (Type == TreeItemType.Folder)
             {

@@ -93,11 +93,11 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding RelativePath}" Header="File" IsReadOnly="True"/>
                 <DataGridTextColumn Binding="{Binding Snippet}" Header="Snipppet" IsReadOnly="True"/>
-                <DataGridTextColumn Binding="{Binding Synopsis}" Header="Synopsis"/>
-                <DataGridTextColumn Binding="{Binding TagProgress}" Header="Progress"/>
-                <DataGridTextColumn Binding="{Binding TagCharacters}" Header="Characters"/>
-                <DataGridTextColumn Binding="{Binding TagLocations}" Header="Locations"/>
-                <DataGridTextColumn Binding="{Binding TagOther}" Header="Tags"/>
+                <DataGridTextColumn Binding="{Binding MetaData.Synopsis}" Header="Synopsis"/>
+                <DataGridTextColumn Binding="{Binding MetaData.Progress}" Header="Progress"/>
+                <DataGridTextColumn Binding="{Binding MetaData.Characters}" Header="Characters"/>
+                <DataGridTextColumn Binding="{Binding MetaData.Locations}" Header="Locations"/>
+                <DataGridTextColumn Binding="{Binding MetaData.Tags}" Header="Tags"/>
                 <DataGridTextColumn Binding="{Binding WordCount}" ClipboardContentBinding="{x:Null}" Header="Word Count" IsReadOnly="True"/>
                 <DataGridTextColumn Binding="{Binding WordCountTarget}" ClipboardContentBinding="{x:Null}" Header="Target"/>
             </DataGrid.Columns>

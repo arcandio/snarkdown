@@ -3,7 +3,8 @@
  * locations: heaven, purgatory
  * progress: finished, in progress
  * tags: foo, bar
-
+ * doctarget: 100
+ 
 # Notes
 this is some note tex that should end up appearing in the metadata for `Chapter 1\scene.md`
 

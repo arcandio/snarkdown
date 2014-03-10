@@ -77,92 +77,92 @@ namespace Snarkdown_WPF
         public string Characters
         {
             get { return characters; }
-            set { characters = value; }
+            set { characters = value; BuildTagsToString(); NotifyPropertyChanged(); }
         }
         private string locations;
         public string Locations
         {
             get { return locations; }
-            set { locations = value; }
+            set { locations = value; BuildTagsToString(); NotifyPropertyChanged(); }
         }
         private string progress;
         public string Progress
         {
             get { return progress; }
-            set { progress = value; }
+            set { progress = value; BuildTagsToString(); NotifyPropertyChanged(); }
         }
         private string tags;
         public string Tags
         {
             get { return tags; }
-            set { tags = value; }
+            set { tags = value; BuildTagsToString(); NotifyPropertyChanged(); }
         }
         private int docWords;
         public int DocWords
         {
             get { return docWords; }
-            set { docWords = value; }
+            set { docWords = value; BuildTagsToString(); NotifyPropertyChanged(); }
         }
         private int docTarget;
         public int DocTarget
         {
             get { return docTarget; }
-            set { docTarget = value; }
+            set { docTarget = value; BuildTagsToString(); NotifyPropertyChanged(); }
         }
         private string synopsis;
         public string Synopsis
         {
             get { return synopsis; }
-            set { synopsis = value; }
+            set { synopsis = value; BuildTagsToString(); NotifyPropertyChanged(); }
         }
 
         private string title;
         public string Title
         {
             get { return title; }
-            set { title = value; }
+            set { title = value; BuildTagsToString(); NotifyPropertyChanged(); }
         }
         private string author;
         public string Author
         {
             get { return author; }
-            set { author = value; }
+            set { author = value; BuildTagsToString(); NotifyPropertyChanged(); }
         }
         private int projectTarget;
         public int ProjectTarget
         {
             get { return projectTarget; }
-            set { projectTarget = value; }
+            set { projectTarget = value; BuildTagsToString(); NotifyPropertyChanged(); }
         }
         private int projectWords;
         public int ProjectWords
         {
             get { return projectWords; }
-            set { projectWords = value; }
+            set { projectWords = value; BuildTagsToString(); NotifyPropertyChanged(); }
         }
         private int daily;
         public int Daily
         {
             get { return daily; }
-            set { daily = value; }
+            set { daily = value; BuildTagsToString(); NotifyPropertyChanged(); }
         }
         private int dailyTarget;
         public int DailyTarget
         {
             get { return dailyTarget; }
-            set { dailyTarget = value; }
+            set { dailyTarget = value; BuildTagsToString(); NotifyPropertyChanged(); }
         }
         private DateTime dueDate;
         public DateTime DueDate
         {
             get { return dueDate; }
-            set { dueDate = value; }
+            set { dueDate = value; BuildTagsToString(); NotifyPropertyChanged(); }
         }
         private int pace;
         public int Pace
         {
             get { return pace; }
-            set { pace = value; }
+            set { pace = value; BuildTagsToString(); NotifyPropertyChanged(); }
         }
 
         public void ParseTagsFromString (string metaInput)
@@ -191,7 +191,8 @@ namespace Snarkdown_WPF
                 if (isTag)
                 {
                     // we have a tag, so parse it
-                    string value = line.Replace(foundTag, "").Trim();
+                    //string value = line.Replace(foundTag, "").Trim();
+                    string value = line.Substring(foundTag.Length).Trim();
                     // switch and parse
                     switch (foundTag.ToLower())
                     {
@@ -258,6 +259,69 @@ namespace Snarkdown_WPF
         public string BuildTagsToString ()
         {
             string build = "";
+            
+            if (title != null)
+            {
+                build += " * Title: " + title + Environment.NewLine;
+            }
+            if (author != null)
+            {
+                build += " * Author: " + author + Environment.NewLine;
+            }
+            if (projectTarget != 0)
+            {
+                build += " * ProjectTarget: " + projectTarget + Environment.NewLine;
+            }
+            if (projectWords != 0)
+            {
+                build += " * ProjectWords: " + projectWords + Environment.NewLine;
+            }
+            if (dailyTarget != 0)
+            {
+                build += " * DailyTarget: " + dailyTarget + Environment.NewLine;
+            }
+            if (daily != 0)
+            {
+                build += " * Daily: " + daily + Environment.NewLine;
+            }
+            if (dueDate != null)
+            {
+                build += " * DueDate: " + dueDate + Environment.NewLine;
+            }
+            if (pace != 0)
+            {
+                build += " * Pace: " + pace + Environment.NewLine;
+            }
+
+            if (characters != null)
+            {
+                build += " * Characters: " + characters + Environment.NewLine;
+            }
+            if (locations != null)
+            {
+                build += " * Locations: " + locations + Environment.NewLine;
+            }
+            if (progress != null)
+            {
+                build += " * Progress: " + progress + Environment.NewLine;
+            }
+            if (docTarget != 0)
+            {
+                build += " * DocTarget: " + docTarget + Environment.NewLine;
+            }
+            if (docWords != 0)
+            {
+                build += " * DocWords: " + docWords + Environment.NewLine;
+            }
+            if (Tags != null)
+            {
+                build += " * Tags: " + tags + Environment.NewLine;
+            }
+            if (synopsis != null)
+            {
+                build += " * Synopsis: " + synopsis + Environment.NewLine;
+            }
+
 
             // regex replace tag values?
             // rebuild meta completely?
