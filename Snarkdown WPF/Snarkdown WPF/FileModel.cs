@@ -213,6 +213,7 @@ namespace Snarkdown_WPF
             {
                 string[] s = Directory.GetFileSystemEntries(pathFile);
                 List<string> myChildren = Directory.EnumerateFileSystemEntries(pathFile).ToList<string>();
+                myChildren.Sort();
                 for (int i = 0; i < myChildren.Count; i++)
                 {
                     // check if this is a valid file object to show
@@ -238,6 +239,7 @@ namespace Snarkdown_WPF
                         //db.w("doc models: " + Model.Instance.docModels.Count);
                     }
                 }
+                
                 hasChildren = true;
             }
         }
@@ -458,7 +460,7 @@ namespace Snarkdown_WPF
         {
             // save the project data.
             //Model.Instance.SaveProjectData();
-            if (CheckFilePath(false))
+            if (CheckFilePath(false) && metaItemType != TreeItemType.Folder)
             {
                 using (StreamWriter sw = new StreamWriter(pathFile))
                 {

@@ -25,20 +25,22 @@
 
         <CommandBinding Command="{x:Static local:Commands.BackupProject}" Executed="BackupProj_Click"/>
         <CommandBinding Command="{x:Static local:Commands.ExportProject}"  Executed="ExportProj_Click"/>
+        <CommandBinding Command="{x:Static local:Commands.ReloadProject}" Executed="ReloadProj_Click" />
 
         <CommandBinding Command="{x:Static local:Commands.FullScreen}" Executed="Fullscreen_Click"/>
     </Window.CommandBindings>
     <Grid x:Name="grid1" DataContext="{Binding Instance}" SnapsToDevicePixels="True" >
         <Grid.RowDefinitions>
-            <RowDefinition Height="2*"/>
-            <RowDefinition x:Name="collapseRow"/>
+            <RowDefinition/>
+            <RowDefinition Height="53*"/>
+            <RowDefinition x:Name="collapseRow" Height="27*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
             <ColumnDefinition x:Name="collapseCol"/>
         </Grid.ColumnDefinitions>
-        <Menu Height="21" VerticalAlignment="Top" Grid.ColumnSpan="2">
+        <Menu Height="21" VerticalAlignment="Top" Grid.ColumnSpan="2" Grid.RowSpan="2">
             <MenuItem Header="_File">
                 <MenuItem x:Name="NewDoc" Header="_New Document" Command="ApplicationCommands.New"/>
                 <!--<MenuItem x:Name="OpenDoc" Header="_Open Document" InputGestureText="Ctrl+O" Click="OpenDoc_Click" />-->
@@ -46,6 +48,7 @@
                 <Separator />
                 <MenuItem x:Name="NewProj" Header="N_ew Project" Command="local:Commands.NewProject" />
                 <MenuItem x:Name="OpenProj" Header="O_pen Project" Command="ApplicationCommands.Open" />
+                <MenuItem x:Name="ReloadProj" Header="R_eload Project" Command="local:Commands.ReloadProject" />
                 <Separator />
                 <MenuItem x:Name="ExportProj" Header="_Export Project" Command="local:Commands.ExportProject" />
                 <MenuItem x:Name="BackupProj" Header="_Backup Project" Command="local:Commands.BackupProject" />
@@ -66,30 +69,29 @@
                 <MenuItem x:Name="spellcheckMenuItem" IsCheckable="True" Header="Spellcheck" />
             </MenuItem>
         </Menu>
-        <StatusBar Grid.ColumnSpan="2" Grid.Row="2" Background="#FF424242">
-            <Button Content="Edit Word Counts"/>
+        <StatusBar Grid.ColumnSpan="2" Grid.Row="3" Background="#FF424242">
             <Label x:Name="labelWcProj" Content="Project Words" Foreground="#FFB4B4B4" Visibility="{Binding Source={x:Static settings:Settings.Default}, Path=useProjWc, Mode=TwoWay}" />
             <Label x:Name="labelWcDay" Content="Daily Words" Foreground="#FFB4B4B4" Visibility="{Binding Source={x:Static settings:Settings.Default}, Path=useDailyWc, Mode=TwoWay}" />
             <Label x:Name="labelWcDoc" Content="Document Words" Foreground="#FFB4B4B4" Visibility="{Binding Source={x:Static settings:Settings.Default}, Path=useDocWc, Mode=TwoWay}" />
         </StatusBar>
-        <GridSplitter Margin="0,21,0,0" Width="4" Background="#FF383838"/>
-        <GridSplitter HorizontalAlignment="Stretch" Height="4" VerticalAlignment="Top" ResizeDirection="Rows" Grid.Row="1" Grid.ColumnSpan="2" Background="#FF383838"/>
-        <Label Content="Meta" HorizontalAlignment="Left" Margin="10,23,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.577" Height="26" Foreground="#FFC9C9C9" FontWeight="Bold" FontSize="14" Padding="0" VerticalContentAlignment="Center" Grid.Column="1">
+        <GridSplitter Margin="0,14,0,0" Width="4" Background="#FF383838" Grid.Row="1"/>
+        <GridSplitter HorizontalAlignment="Stretch" Height="4" VerticalAlignment="Top" ResizeDirection="Rows" Grid.Row="2" Grid.ColumnSpan="2" Background="#FF383838"/>
+        <Label Content="Meta" HorizontalAlignment="Left" Margin="10,16,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.577" Height="26" Foreground="#FFC9C9C9" FontWeight="Bold" FontSize="14" Padding="0" VerticalContentAlignment="Center" Grid.Column="1" Grid.Row="1">
             <Label.Effect>
                 <DropShadowEffect Opacity="0.5" ShadowDepth="2"/>
             </Label.Effect>
         </Label>
-        <Label Content="Project" HorizontalAlignment="Left" Margin="10,4,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.577" Height="26" Foreground="#FFC9C9C9" FontWeight="Bold" FontSize="14" Padding="0" VerticalContentAlignment="Center" Grid.Row="1">
+        <Label Content="Project" HorizontalAlignment="Left" Margin="10,4,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.577" Height="26" Foreground="#FFC9C9C9" FontWeight="Bold" FontSize="14" Padding="0" VerticalContentAlignment="Center" Grid.Row="2">
             <Label.Effect>
                 <DropShadowEffect Opacity="0.5" ShadowDepth="2"/>
             </Label.Effect>
         </Label>
-        <Label Content="Document" HorizontalAlignment="Left" Margin="10,23,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.577" Height="26" Foreground="#FFC9C9C9" FontWeight="Bold" FontSize="14" Padding="0" VerticalContentAlignment="Center" SnapsToDevicePixels="True">
+        <Label Content="Document" HorizontalAlignment="Left" Margin="10,16,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.577" Height="26" Foreground="#FFC9C9C9" FontWeight="Bold" FontSize="14" Padding="0" VerticalContentAlignment="Center" SnapsToDevicePixels="True" Grid.Row="1">
             <Label.Effect>
                 <DropShadowEffect Opacity="0.5" ShadowDepth="2"/>
             </Label.Effect>
         </Label>
-        <DataGrid x:Name="datagrid" ItemsSource="{Binding Instance.DocModels}" Margin="10,30,10,5" Grid.Row="1" AutoGenerateColumns="False" Grid.ColumnSpan="2" PresentationTraceSources.TraceLevel="High" CurrentCellChanged="datagrid_CurrentCellChanged" SelectionMode="Single" CanUserAddRows="False" Background="#FFA2A2A2" BorderBrush="Black">
+        <DataGrid x:Name="datagrid" ItemsSource="{Binding Instance.DocModels}" Margin="10,30,10,5" Grid.Row="2" AutoGenerateColumns="False" Grid.ColumnSpan="2" PresentationTraceSources.TraceLevel="High" CurrentCellChanged="datagrid_CurrentCellChanged" SelectionMode="Single" CanUserAddRows="False" Background="#FFA2A2A2" BorderBrush="Black">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding RelativePath}" Header="File" IsReadOnly="True"/>
                 <DataGridTextColumn Binding="{Binding Snippet}" Header="Snipppet" IsReadOnly="True"/>
@@ -102,21 +104,21 @@
                 <DataGridTextColumn Binding="{Binding WordCountTarget}" ClipboardContentBinding="{x:Null}" Header="Target"/>
             </DataGrid.Columns>
         </DataGrid>
-        <RichTextBox x:Name="rtb" Margin="10,49,10,10" Block.LineHeight="1" KeyUp="Rtb_KeyUp" SpellCheck.IsEnabled="{Binding IsChecked, ElementName=spellcheckMenuItem, Mode=TwoWay}" VerticalScrollBarVisibility="Visible" Background="#FFA2A2A2" FontSize="18" Padding="20,1" BorderBrush="Black" AcceptsTab="True">
+        <RichTextBox x:Name="rtb" Margin="10,42,10,10" Block.LineHeight="1" KeyUp="Rtb_KeyUp" SpellCheck.IsEnabled="{Binding IsChecked, ElementName=spellcheckMenuItem, Mode=TwoWay}" VerticalScrollBarVisibility="Visible" Background="#FFA2A2A2" FontSize="18" Padding="20,1" BorderBrush="Black" AcceptsTab="True" Grid.Row="1">
             <FlowDocument>
                 <Paragraph>
                     <Run Text="Document Panel"/>
                 </Paragraph>
             </FlowDocument>
         </RichTextBox>
-        <RichTextBox x:Name="rtbmeta" Margin="8,49,9,6" Block.LineHeight="1" KeyUp="Rtb_KeyUp" SpellCheck.IsEnabled="{Binding IsChecked, ElementName=spellcheckMenuItem, Mode=TwoWay}" VerticalScrollBarVisibility="Visible" Background="#FFA2A2A2" FontSize="18" Padding="20,1" BorderBrush="Black" AcceptsTab="True" Grid.Column="1">
+        <RichTextBox x:Name="rtbmeta" Margin="8,42,9,6" Block.LineHeight="1" KeyUp="Rtb_KeyUp" SpellCheck.IsEnabled="{Binding IsChecked, ElementName=spellcheckMenuItem, Mode=TwoWay}" VerticalScrollBarVisibility="Visible" Background="#FFA2A2A2" FontSize="18" Padding="20,1" BorderBrush="Black" AcceptsTab="True" Grid.Column="1" Grid.Row="1">
             <FlowDocument>
                 <Paragraph>
                     <Run Text="Document Panel"/>
                 </Paragraph>
             </FlowDocument>
         </RichTextBox>
-        <Grid x:Name="projectOverlay" Margin="0" Grid.RowSpan="3" Background="#B2000000" Grid.ColumnSpan="2" Visibility="{Binding Instance.IsProjectBlank, Converter={StaticResource BooleanToVisibilityConverter}}" SnapsToDevicePixels="True" d:IsHidden="True">
+        <Grid x:Name="projectOverlay" Margin="0" Grid.RowSpan="4" Background="#B2000000" Grid.ColumnSpan="2" Visibility="{Binding Instance.IsProjectBlank, Converter={StaticResource BooleanToVisibilityConverter}}" SnapsToDevicePixels="True" d:IsHidden="True">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>

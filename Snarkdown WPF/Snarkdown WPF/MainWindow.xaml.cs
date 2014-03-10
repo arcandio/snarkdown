@@ -152,6 +152,14 @@ namespace Snarkdown_WPF
                 fullscreenMenuItem.IsChecked = IsFullscreen;
             }
         }
+        private void ReloadProj_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (DocModel dm in Model.Instance.docModels)
+            {
+                dm.Save();
+            }
+            Model.Instance.LoadProject(Model.Instance.projectPath);
+        }
         #endregion
         private void datagrid_CurrentCellChanged(object sender, EventArgs e)
         {
@@ -174,6 +182,8 @@ namespace Snarkdown_WPF
             Model.Instance.Refresh();
         }
 
+
+
     }
     public static class Commands
     {
@@ -182,6 +192,7 @@ namespace Snarkdown_WPF
         public static readonly RoutedCommand BackupProject = new RoutedCommand("Backup Project", typeof(Commands));
         public static readonly RoutedCommand ExportProject = new RoutedCommand("Export Project", typeof(Commands));
         public static readonly RoutedCommand FullScreen = new RoutedCommand("Fullscreen", typeof(Commands));
+        public static readonly RoutedCommand ReloadProject = new RoutedCommand("Reload Project", typeof(Commands));
 
         static Commands()
         {
@@ -189,6 +200,7 @@ namespace Snarkdown_WPF
             BackupProject.InputGestures.Add(new KeyGesture(Key.B, ModifierKeys.Control | ModifierKeys.Alt));
             ExportProject.InputGestures.Add(new KeyGesture(Key.E, ModifierKeys.Control | ModifierKeys.Alt));
             FullScreen.InputGestures.Add(new KeyGesture(Key.F11));
+            ReloadProject.InputGestures.Add(new KeyGesture(Key.F5));
         }
     }
 }
