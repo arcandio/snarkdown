@@ -459,7 +459,8 @@ namespace Snarkdown_WPF
         public void Save()
         {
             // save the project data.
-            //Model.Instance.SaveProjectData();
+            // currently not saving filestreams for later use
+            // not keeping them open causes potential problems with syncing with the filesystem.
             if (CheckFilePath(false) && metaItemType != TreeItemType.Folder)
             {
                 using (StreamWriter sw = new StreamWriter(pathFile))
