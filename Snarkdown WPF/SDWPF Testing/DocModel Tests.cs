@@ -72,7 +72,7 @@ namespace SDWPF_Testing
         {
             // arrange
             string file = "testSave.md";
-            string contentsInput = "*test* __contents__";
+            string contentsInput = "*test* __contents__" + new Random().Next();
             string contentsOutput = "";
             DocModel docmodel;
             // act

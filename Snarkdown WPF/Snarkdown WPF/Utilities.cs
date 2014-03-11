@@ -168,9 +168,11 @@ namespace Snarkdown_WPF
                 retries--;
                 try
                 {
-                    FileStream filestream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
+                    FileStream filestream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read);
                     if (filestream.CanWrite == true)
                         return filestream;
+                    else
+                        db.w("could not get filestream: " + retries);
                 }
                 catch (Exception e)
                 {

@@ -30,6 +30,7 @@ namespace Snarkdown_WPF
         {
             if (Model.Instance.projectPath != null && Model.Instance.projectPath.Length > 0)
             {
+                /*
                 fsw = new FileSystemWatcher(Model.Instance.projectPath);
                 fsw.IncludeSubdirectories = true;
                 fsw.EnableRaisingEvents = true;
@@ -38,6 +39,7 @@ namespace Snarkdown_WPF
                 fsw.Deleted += new FileSystemEventHandler(Fs_FileWasDeleted);
                 fsw.Changed += new FileSystemEventHandler(Fs_FileWasChanged);
                 fsw.Renamed += new RenamedEventHandler(Fs_FileWasRenamed);
+                 * */
             }
         }
 

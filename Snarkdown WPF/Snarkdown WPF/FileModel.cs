@@ -259,9 +259,13 @@ namespace Snarkdown_WPF
                 // connect file to meta
                 if (metaExists)
                 {
-                    using (StreamReader sr = new StreamReader(metaPath))
+                    FileStream fs = DirectoryHelper.GetStream(metaPath, 20);
+                    if (fs != null)
                     {
-                        meta = sr.ReadToEnd();
+                        using (StreamReader sr = new StreamReader(fs))
+                        {
+                            meta = sr.ReadToEnd();
+                        }
                     }
                 }
             }
@@ -283,7 +287,7 @@ namespace Snarkdown_WPF
         }
         private void GetFileName()
         {
-            if (CheckFilePath(true))
+            if (CheckFilePath(false))
             {
                 fileName = Path.GetFileName(pathFile);
             }
@@ -294,7 +298,7 @@ namespace Snarkdown_WPF
         private void GetItemType()
         {
             metaItemType = TreeItemType.None;
-            if (CheckFilePath(true))
+            if (CheckFilePath(false))
             {
                 string ex = Path.GetExtension(fileName);
 
@@ -457,23 +461,40 @@ namespace Snarkdown_WPF
         public void Save()
         {
             // save the project data.
-            //Model.Instance.SaveProjectData();
             if (CheckFilePath(false))
             {
-                using (StreamWriter sw = new StreamWriter(pathFile))
+                if (metaItemType == TreeItemType.Text)
                 {
-                    sw.Write(textContents);
-                }
-                if (metaPath != null && meta != null && meta.Length > 0)
-                {
-                    if (metaPath != null || metaPath.Length < 1)
+                    if (File.Exists(pathFile) == false)
                     {
-                        metaPath = pathFile+"meta";
+                        File.Create(pathFile);
                     }
-                    using (StreamWriter sw = new StreamWriter(metaPath))
+                    FileStream fs = DirectoryHelper.GetStream(pathFile, 20);
+                    if (fs != null)
                     {
-                        sw.Write(meta);
-                        //db.w("wrote to meta");
+                        using (StreamWriter sw = new StreamWriter(pathFile))
+                        {
+                            sw.Write(textContents);
+                        }
+                    }
+                }
+                if (meta != null)
+                {
+                    if (metaItemType == TreeItemType.Text)
+                    {
+                        metaPath = pathFile + "meta";
+                    }
+                    else if (metaItemType == TreeItemType.Folder)
+                    {
+                        metaPath = pathFile + ".mdmeta";
+                    }
+                    FileStream fs = DirectoryHelper.GetStream(metaPath, 20);
+                    if (fs != null)
+                    {
+                        using (StreamWriter sw = new StreamWriter(metaPath))
+                        {
+                            sw.Write(meta);
+                        }
                     }
                 }
             }
