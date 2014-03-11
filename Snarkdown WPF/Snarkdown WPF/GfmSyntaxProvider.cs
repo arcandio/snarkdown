@@ -52,6 +52,7 @@ namespace GfmSyntax
             FlowDocument fd = rtb.Document;
             Stopwatch st = Stopwatch.StartNew();
             TextPointer tp = rtb.CaretPosition;
+            TextRange selection = new TextRange(rtb.Selection.Start, rtb.Selection.End);
             int pointer = rtb.CaretPosition.GetOffsetToPosition(rtb.CaretPosition.DocumentStart) * -1;
             LogicalDirection dir = rtb.CaretPosition.LogicalDirection;
             TextRange cursor = new TextRange(rtb.Document.ContentStart, rtb.CaretPosition);
@@ -116,6 +117,8 @@ namespace GfmSyntax
             rtb.Document = fd;
             // restore our caret position
             rtb.CaretPosition = tp;
+            // Restore selection
+            rtb.Selection.Select(selection.Start, selection.End);
             // stop stopwatch for performance check
             st.Stop();
             //db.w(" elapsed " + st.Elapsed);
